@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "commonjs",
+    "allowJs": true,
+    "moduleResolution": "node",
+    "lib": ["es7"],
+    "allowSyntheticDefaultImports": true,
+    "outDir": "./build",
+    "sourceMap": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": true
+  },
+  "include": ["src/"],
+  "exclude": ["node_modules/", "**/node_modules/*", ".history"]
+}

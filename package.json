@@ -1,0 +1,21 @@
+{
+  "name": "onewallet.service.mock",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Proto-Garage/onewallet.service.mock.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Proto-Garage/onewallet.service.mock/issues"
+  },
+  "homepage": "https://github.com/Proto-Garage/onewallet.service.mock#readme",
+  "dependencies": {
+    "ramda": "^0.25.0",
+    "typescript": "^3.1.6",
+    "uuid": "^3.3.2"
+  }
+}
