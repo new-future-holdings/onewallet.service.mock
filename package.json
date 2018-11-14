@@ -1,8 +1,8 @@
 {
   "name": "onewallet.service.mock",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "",
-  "main": "index.ts",
+  "main": "build/index.js",
   "scripts": {
     "clean": "rimraf build/",
     "build": "npm run clean && tsc --project tsconfig.json"
@@ -23,6 +23,7 @@
     "uuid": "^3.3.2"
   },
   "devDependencies": {
+    "@types/uuid": "^3.4.4",
     "rimraf": "^2.6.2"
   }
 }
