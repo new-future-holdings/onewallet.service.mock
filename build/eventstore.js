@@ -10,12 +10,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const R = __importStar(require("ramda"));
 const util_1 = require("./util");
 let events = [];
-function clearEvents() {
-    events = [];
+function clearEvents(initialEvents) {
+    events = initialEvents || [];
 }
 exports.clearEvents = clearEvents;
-async function startWorker(rabbit) {
+async function startWorker(rabbit, initialEvents) {
     const publish = await rabbit.createPublisher('OneWallet');
+    events = initialEvents;
     await rabbit.createWorker('EventStore', async ({ type, data }) => {
         if (type === 'Events') {
             return R.filter((event) => {
