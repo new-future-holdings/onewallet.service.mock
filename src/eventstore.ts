@@ -3,12 +3,13 @@ import { Rabbit, Event } from './types';
 import { generateId } from './util';
 let events: Event[] = [];
 
-export function clearEvents() {
-  events = [];
+export function clearEvents(initialEvents: Event[]) {
+  events = initialEvents || [];
 }
 
-export async function startWorker(rabbit: Rabbit) {
+export async function startWorker(rabbit: Rabbit, initialEvents: Event[]) {
   const publish = await rabbit.createPublisher('OneWallet');
+  events = initialEvents;
   await rabbit.createWorker('EventStore', async ({ type, data }) => {
     if (type === 'Events') {
       return R.filter((event: Event) => {
