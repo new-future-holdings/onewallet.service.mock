@@ -7,9 +7,9 @@ const ramda_1 = __importDefault(require("ramda"));
 let workers;
 async function start(rabbit, accounts) {
     workers = await Promise.all([
-        rabbit.createWorker('Account.Query', async ({ type, input }) => {
+        rabbit.createWorker('Account.Query', async ({ type, data }) => {
             if (type === 'Information') {
-                return ramda_1.default.find(ramda_1.default.propEq('id', input.id))(accounts) || null;
+                return ramda_1.default.find(ramda_1.default.propEq('id', data.id))(accounts) || null;
             }
         }),
         rabbit.createWorker('Account.Command', async () => true),

@@ -4,9 +4,9 @@ import { Rabbit } from './types';
 let workers: any[];
 export async function start(rabbit: Rabbit, accounts: any[]) {
   workers = await Promise.all([
-    rabbit.createWorker('Account.Query', async ({ type, input }) => {
+    rabbit.createWorker('Account.Query', async ({ type, data }) => {
       if (type === 'Information') {
-        return R.find(R.propEq('id', input.id))(accounts) || null;
+        return R.find(R.propEq('id', data.id))(accounts) || null;
       }
     }),
     rabbit.createWorker('Account.Command', async () => true),
