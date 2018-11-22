@@ -1,5 +1,5 @@
-import * as eventStore from './eventstore';
-import * as balance from './balance';
-export declare const EventStoreMock: typeof eventStore;
-export declare const BalanceMock: typeof balance;
+import * as EventStoreMock from './eventstore';
+import * as BalanceMock from './balance';
+import * as AccountMock from './account';
+export { EventStoreMock, BalanceMock, AccountMock };
 //# sourceMappingURL=index.d.ts.map

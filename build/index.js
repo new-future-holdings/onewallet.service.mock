@@ -7,8 +7,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const eventStore = __importStar(require("./eventstore"));
-const balance = __importStar(require("./balance"));
-exports.EventStoreMock = eventStore;
-exports.BalanceMock = balance;
+const EventStoreMock = __importStar(require("./eventstore"));
+exports.EventStoreMock = EventStoreMock;
+const BalanceMock = __importStar(require("./balance"));
+exports.BalanceMock = BalanceMock;
+const AccountMock = __importStar(require("./account"));
+exports.AccountMock = AccountMock;
 //# sourceMappingURL=index.js.map
