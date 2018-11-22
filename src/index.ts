@@ -1,5 +1,5 @@
-import * as eventStore from './eventstore';
-import * as balance from './balance';
+import * as EventStoreMock from './eventstore';
+import * as BalanceMock from './balance';
+import * as AccountMock from './account';
 
-export const EventStoreMock = eventStore;
-export const BalanceMock = balance;
+export { EventStoreMock, BalanceMock, AccountMock };
