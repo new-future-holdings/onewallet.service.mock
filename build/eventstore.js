@@ -14,6 +14,12 @@ function clearEvents(initialEvents) {
     events = initialEvents || [];
 }
 exports.clearEvents = clearEvents;
+function addEvent(data) {
+    const event = Object.assign({}, data, { id: util_1.generateId('evn').slice(0, 27), timestamp: Date.now() });
+    events.push(event);
+    return event;
+}
+exports.addEvent = addEvent;
 async function startWorker(rabbit, initialEvents) {
     const publish = await rabbit.createPublisher('OneWallet');
     events = initialEvents;
