@@ -19,11 +19,12 @@ export function addEvent(data: Event) {
   return event;
 }
 
-export async function startWorker(rabbit: Rabbit, initialEvents: Event[]) {
+let worker: any;
+export async function start(rabbit: Rabbit, initialEvents: Event[]) {
   const publish = await rabbit.createPublisher('OneWallet');
   events = R.clone(initialEvents);
 
-  await rabbit.createWorker('EventStore', async ({ type, data }) => {
+  worker = await rabbit.createWorker('EventStore', async ({ type, data }) => {
     if (type === 'Events') {
       const conditions: any[] = [];
       if (data.aggregateType) {
@@ -59,4 +60,8 @@ export async function startWorker(rabbit: Rabbit, initialEvents: Event[]) {
       return event;
     }
   });
+}
+
+export async function stop() {
+  await worker.stop();
 }

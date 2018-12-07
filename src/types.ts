@@ -1,12 +1,11 @@
-
 export interface WorkerOptions {
   concurrency?: number;
 }
 
-export type Event<TBody = any> = Readonly<{
+export type Event<T = any> = Readonly<{
   id: string;
   type: string;
-  body: TBody;
+  body: T;
   aggregateId: string;
   aggregateType: number;
   aggregateVersion: number;
@@ -14,10 +13,12 @@ export type Event<TBody = any> = Readonly<{
 }>;
 
 export interface Rabbit {
-  createPublisher: (...arg: any[]) => Promise<(topic: string, ...args: any[]) => Promise<any>>;
+  createPublisher: (
+    ...arg: any[]
+  ) => Promise<(topic: string, ...args: any[]) => Promise<any>>;
   createWorker: (
     scope: string,
     handler: ((...args: Array<any>) => Promise<any>),
-    options?: WorkerOptions,
+    options?: WorkerOptions
   ) => Promise<any>;
 }
