@@ -9,5 +9,6 @@ export declare function addEvent(data: Event): {
     aggregateType: number;
     aggregateVersion: number;
 };
-export declare function startWorker(rabbit: Rabbit, initialEvents: Event[]): Promise<void>;
+export declare function start(rabbit: Rabbit, initialEvents: Event[]): Promise<void>;
+export declare function stop(): Promise<void>;
 //# sourceMappingURL=eventstore.d.ts.map

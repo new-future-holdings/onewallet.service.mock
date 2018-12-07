@@ -1,10 +1,10 @@
 export interface WorkerOptions {
     concurrency?: number;
 }
-export declare type Event<TBody = any> = Readonly<{
+export declare type Event<T = any> = Readonly<{
     id: string;
     type: string;
-    body: TBody;
+    body: T;
     aggregateId: string;
     aggregateType: number;
     aggregateVersion: number;

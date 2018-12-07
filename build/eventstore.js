@@ -20,18 +20,25 @@ function addEvent(data) {
     return event;
 }
 exports.addEvent = addEvent;
-async function startWorker(rabbit, initialEvents) {
+let worker;
+async function start(rabbit, initialEvents) {
     const publish = await rabbit.createPublisher('OneWallet');
-    events = initialEvents;
-    await rabbit.createWorker('EventStore', async ({ type, data }) => {
+    events = R.clone(initialEvents);
+    worker = await rabbit.createWorker('EventStore', async ({ type, data }) => {
         if (type === 'Events') {
-            return R.filter((event) => {
-                if (data.aggregateId) {
-                    return (event.aggregateType === data.aggregateType &&
-                        event.aggregateId === data.aggregateId);
-                }
-                return event.aggregateType === data.aggregateType;
-            })(events);
+            const conditions = [];
+            if (data.aggregateType) {
+                conditions.push(R.propEq('aggregateType', data.aggregateType));
+            }
+            if (data.aggregateTypes) {
+                conditions.push((event) => R.contains(event.aggregateType)(data.aggregateTypes));
+            }
+            if (data.aggregateId) {
+                conditions.push(R.propEq('aggregateId', data.aggregateId));
+            }
+            const result = R.filter(R.allPass(conditions))(events);
+            events = R.filter(R.complement(R.allPass(conditions)))(events);
+            return result;
         }
         if (type === 'CreateEvent') {
             const event = Object.assign({}, data, { id: util_1.generateId('evn').slice(0, 27), timestamp: Date.now() });
@@ -41,5 +48,9 @@ async function startWorker(rabbit, initialEvents) {
         }
     });
 }
-exports.startWorker = startWorker;
+exports.start = start;
+async function stop() {
+    await worker.stop();
+}
+exports.stop = stop;
 //# sourceMappingURL=eventstore.js.map
