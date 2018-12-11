@@ -59,6 +59,10 @@ export async function start(rabbit: Rabbit, initialEvents: Event[]) {
       await publish(`${data.aggregateType}.${data.aggregateId}`, event);
       return event;
     }
+
+    if (type === 'Snapshot') {
+      return null;
+    }
   });
 }
 
