@@ -19,6 +19,8 @@ export function addEvent(data: Event) {
   return event;
 }
 
+export { events };
+
 let worker: any;
 export async function start(rabbit: Rabbit, initialEvents: Event[]) {
   const publish = await rabbit.createPublisher('OneWallet');
