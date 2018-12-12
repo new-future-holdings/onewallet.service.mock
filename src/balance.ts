@@ -1,11 +1,16 @@
 import R from 'ramda';
 import { Rabbit } from './types';
 
+type Document = { account: string; available: number; total: number };
+
 let workers: any[];
-export async function start(
-  rabbit: Rabbit,
-  balances: { account: string; available: number; total: number }[]
-) {
+let balances: Document[];
+
+export { balances };
+
+export async function start(rabbit: Rabbit, initialBalances: Document[]) {
+  balances = R.clone(initialBalances);
+
   workers = await Promise.all([
     rabbit.createWorker('Balance.Query', async ({ type, data }) => {
       if (type === 'AvailableBalance') {
