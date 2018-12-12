@@ -1,4 +1,5 @@
-import * as R from 'ramda';
+import R from 'ramda';
+
 import { Rabbit, Event } from './types';
 import { generateId } from './util';
 
@@ -34,6 +35,10 @@ export async function start(rabbit: Rabbit, initialEvents: Event[]) {
             event.aggregateType === data.aggregateType &&
             event.aggregateId === data.aggregateId
           );
+        }
+
+        if (data.aggregateTypes) {
+          return R.contains(event.aggregateType)(data.aggregateTypes);
         }
 
         return event.aggregateType === data.aggregateType;

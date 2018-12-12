@@ -1,13 +1,9 @@
 "use strict";
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const R = __importStar(require("ramda"));
+const ramda_1 = __importDefault(require("ramda"));
 const util_1 = require("./util");
 let events = [];
 exports.events = events;
@@ -24,13 +20,16 @@ exports.addEvent = addEvent;
 let worker;
 async function start(rabbit, initialEvents) {
     const publish = await rabbit.createPublisher('OneWallet');
-    exports.events = events = R.clone(initialEvents);
+    exports.events = events = ramda_1.default.clone(initialEvents);
     worker = await rabbit.createWorker('EventStore', async ({ type, data }) => {
         if (type === 'Events') {
-            return R.filter((event) => {
+            return ramda_1.default.filter((event) => {
                 if (data.aggregateId) {
                     return (event.aggregateType === data.aggregateType &&
                         event.aggregateId === data.aggregateId);
+                }
+                if (data.aggregateTypes) {
+                    return ramda_1.default.contains(event.aggregateType)(data.aggregateTypes);
                 }
                 return event.aggregateType === data.aggregateType;
             })(events);

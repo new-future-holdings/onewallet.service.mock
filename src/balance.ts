@@ -1,4 +1,5 @@
 import R from 'ramda';
+
 import { Rabbit } from './types';
 
 type Document = { account: string; available: number; total: number };
