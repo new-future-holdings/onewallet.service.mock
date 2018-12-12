@@ -18,11 +18,15 @@ async function start(rabbit, initialBalances) {
         rabbit.createWorker('Balance.Command', async ({ type, data }) => {
             if (type === 'UpdateBalance') {
                 const document = ramda_1.default.find(ramda_1.default.propEq('account', data.account))(balances);
+                if (!document) {
+                    return false;
+                }
                 const balance = document.total + data.delta;
                 document.available = balance;
                 document.total = balance;
                 return true;
             }
+            return true;
         }),
     ]);
 }
