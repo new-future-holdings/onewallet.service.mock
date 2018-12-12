@@ -1,8 +1,11 @@
 import { Rabbit } from './types';
-export declare function start(rabbit: Rabbit, balances: {
+declare type Document = {
     account: string;
     available: number;
     total: number;
-}[]): Promise<void>;
+};
+declare let balances: Document[];
+export { balances };
+export declare function start(rabbit: Rabbit, initialBalances: Document[]): Promise<void>;
 export declare function stop(): Promise<void>;
 //# sourceMappingURL=balance.d.ts.map

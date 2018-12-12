@@ -10,8 +10,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const R = __importStar(require("ramda"));
 const util_1 = require("./util");
 let events = [];
+exports.events = events;
 function clearEvents(initialEvents) {
-    events = initialEvents || [];
+    exports.events = events = initialEvents || [];
 }
 exports.clearEvents = clearEvents;
 function addEvent(data) {
@@ -23,7 +24,7 @@ exports.addEvent = addEvent;
 let worker;
 async function start(rabbit, initialEvents) {
     const publish = await rabbit.createPublisher('OneWallet');
-    events = R.clone(initialEvents);
+    exports.events = events = R.clone(initialEvents);
     worker = await rabbit.createWorker('EventStore', async ({ type, data }) => {
         if (type === 'Events') {
             const conditions = [];
@@ -37,7 +38,7 @@ async function start(rabbit, initialEvents) {
                 conditions.push(R.propEq('aggregateId', data.aggregateId));
             }
             const result = R.filter(R.allPass(conditions))(events);
-            events = R.filter(R.complement(R.allPass(conditions)))(events);
+            exports.events = events = R.filter(R.complement(R.allPass(conditions)))(events);
             return result;
         }
         if (type === 'CreateEvent') {
@@ -45,6 +46,9 @@ async function start(rabbit, initialEvents) {
             events.push(event);
             await publish(`${data.aggregateType}.${data.aggregateId}`, event);
             return event;
+        }
+        if (type === 'Snapshot') {
+            return null;
         }
     });
 }
