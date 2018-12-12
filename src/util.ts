@@ -1,6 +1,15 @@
-import { v4 as uuidV4 } from 'uuid';
+import { v4 as uuidV4, v1 as uuidV1 } from 'uuid';
+import crypto from 'crypto';
 
 export function generateId(prefix: string = 'bal', uuid?: string): string {
   const id = uuid ? uuid : uuidV4();
   return `${prefix}_${id.split('-').join('')}`;
+}
+
+export function generateEventId() {
+  const [, low, mid, high] = uuidV1().match(
+    /^([0-9a-f]{8})-([0-9a-f]{4})-1([0-9a-f]{3})/
+  ) as string[];
+
+  return `evt_${high}${mid}${low}${crypto.randomBytes(4).toString('hex')}`;
 }

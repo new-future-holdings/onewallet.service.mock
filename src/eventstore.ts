@@ -1,7 +1,7 @@
 import R from 'ramda';
 
 import { Rabbit, Event } from './types';
-import { generateId } from './util';
+import { generateEventId } from './util';
 
 let events: Event[] = [];
 
@@ -12,7 +12,7 @@ export function clearEvents(initialEvents: Event[]) {
 export function addEvent(data: Event) {
   const event = {
     ...data,
-    id: generateId('evn').slice(0, 27),
+    id: generateEventId(),
     timestamp: Date.now(),
   };
 
@@ -46,12 +46,7 @@ export async function start(rabbit: Rabbit, initialEvents: Event[]) {
     }
 
     if (type === 'CreateEvent') {
-      const event = {
-        ...data,
-        id: generateId('evn').slice(0, 27),
-        timestamp: Date.now(),
-      };
-      events.push(event);
+      const event = addEvent(data);
 
       await publish(`${data.aggregateType}.${data.aggregateId}`, event);
       return event;

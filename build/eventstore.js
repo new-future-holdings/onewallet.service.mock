@@ -12,7 +12,7 @@ function clearEvents(initialEvents) {
 }
 exports.clearEvents = clearEvents;
 function addEvent(data) {
-    const event = Object.assign({}, data, { id: util_1.generateId('evn').slice(0, 27), timestamp: Date.now() });
+    const event = Object.assign({}, data, { id: util_1.generateEventId(), timestamp: Date.now() });
     events.push(event);
     return event;
 }
@@ -35,8 +35,7 @@ async function start(rabbit, initialEvents) {
             })(events);
         }
         if (type === 'CreateEvent') {
-            const event = Object.assign({}, data, { id: util_1.generateId('evn').slice(0, 27), timestamp: Date.now() });
-            events.push(event);
+            const event = addEvent(data);
             await publish(`${data.aggregateType}.${data.aggregateId}`, event);
             return event;
         }
