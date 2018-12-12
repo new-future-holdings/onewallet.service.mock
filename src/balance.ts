@@ -12,7 +12,15 @@ export async function start(
         return R.find(R.propEq('account', data.account))(balances) || null;
       }
     }),
-    rabbit.createWorker('Balance.Command', async () => true),
+    rabbit.createWorker('Balance.Command', async ({ type, data }) => {
+      if (type === 'UpdateBalance') {
+        const document = R.find(R.propEq('account', data.account))(balances);
+        const balance = document.total + data.delta;
+        document.available = balance;
+        document.total = balance;
+        return true;
+      }
+    }),
   ]);
 }
 
