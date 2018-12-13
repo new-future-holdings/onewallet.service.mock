@@ -29,20 +29,32 @@ export async function start(rabbit: Rabbit, initialEvents: Event[]) {
 
   worker = await rabbit.createWorker('EventStore', async ({ type, data }) => {
     if (type === 'Events') {
-      return R.filter((event: Event) => {
-        if (data.aggregateId) {
-          return (
-            event.aggregateType === data.aggregateType &&
-            event.aggregateId === data.aggregateId
-          );
-        }
+      const conditions: any[] = [];
 
-        if (data.aggregateTypes) {
-          return R.contains(event.aggregateType)(data.aggregateTypes);
-        }
+      if (data.aggregateType) {
+        conditions.push(R.propEq('aggregateType', data.aggregateType));
+      }
 
-        return event.aggregateType === data.aggregateType;
-      })(events);
+      if (data.aggregateTypes) {
+        conditions.push((event: Event) =>
+          R.contains(event.aggregateType)(data.aggregateTypes)
+        );
+      }
+
+      if (data.aggregateId) {
+        conditions.push(R.propEq('aggregateId', data.aggregateId));
+      }
+
+      if (data.sinceId) {
+        conditions.push(
+          R.propSatisfies((value: string) => value > data.sinceId, 'id')
+        );
+      }
+
+      return R.compose<Event[], Event[], Event[]>(
+        R.take(100),
+        R.filter(R.allPass(conditions))
+      )(events);
     }
 
     if (type === 'CreateEvent') {

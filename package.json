@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/Proto-Garage/onewallet.service.mock#readme",
   "dependencies": {
-    "@types/ramda": "^0.25.42",
+    "@types/ramda": "^0.25.43",
     "@types/uuid": "^3.4.4",
     "ramda": "^0.25.0",
     "uuid": "^3.3.2"

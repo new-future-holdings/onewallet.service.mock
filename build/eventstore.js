@@ -23,16 +23,20 @@ async function start(rabbit, initialEvents) {
     exports.events = events = ramda_1.default.clone(initialEvents);
     worker = await rabbit.createWorker('EventStore', async ({ type, data }) => {
         if (type === 'Events') {
-            return ramda_1.default.filter((event) => {
-                if (data.aggregateId) {
-                    return (event.aggregateType === data.aggregateType &&
-                        event.aggregateId === data.aggregateId);
-                }
-                if (data.aggregateTypes) {
-                    return ramda_1.default.contains(event.aggregateType)(data.aggregateTypes);
-                }
-                return event.aggregateType === data.aggregateType;
-            })(events);
+            const conditions = [];
+            if (data.aggregateType) {
+                conditions.push(ramda_1.default.propEq('aggregateType', data.aggregateType));
+            }
+            if (data.aggregateTypes) {
+                conditions.push((event) => ramda_1.default.contains(event.aggregateType)(data.aggregateTypes));
+            }
+            if (data.aggregateId) {
+                conditions.push(ramda_1.default.propEq('aggregateId', data.aggregateId));
+            }
+            if (data.sinceId) {
+                conditions.push(ramda_1.default.propSatisfies((value) => value > data.sinceId, 'id'));
+            }
+            return ramda_1.default.compose(ramda_1.default.take(100), ramda_1.default.filter(ramda_1.default.allPass(conditions)))(events);
         }
         if (type === 'CreateEvent') {
             const event = addEvent(data);
