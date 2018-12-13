@@ -24,13 +24,11 @@ export async function start(rabbit: Rabbit, initialBalances: Document[]) {
         if (!document) {
           return false;
         }
-
         const balance = document.total + data.delta;
         document.available = balance;
         document.total = balance;
         return true;
       }
-
       return true;
     }),
   ]);
