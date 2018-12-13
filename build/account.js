@@ -103,6 +103,25 @@ async function start(rabbit, accounts) {
                 }
                 return true;
             }
+            if (type === 'DeassignPermissionGroup') {
+                if (data === 'AccountNotFound') {
+                    throw new resource_not_found_error_1.default({ type: 'account', id: uuid_1.v4() });
+                }
+                if (data === 'PermissionGrouptNotFound') {
+                    throw new resource_not_found_error_1.default({
+                        type: 'permission_group',
+                        id: uuid_1.v4(),
+                    });
+                }
+                if (data === 'AdminNotPermissionGroupOwner') {
+                    throw new resource_not_found_error_1.default({
+                        account: uuid_1.v4(),
+                        permissionGroup: uuid_1.v4(),
+                        admin: uuid_1.v4(),
+                    });
+                }
+                return true;
+            }
         }),
     ]);
 }

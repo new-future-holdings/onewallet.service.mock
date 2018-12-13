@@ -123,7 +123,26 @@ export async function start(rabbit: Rabbit, accounts: any[]) {
       }
       return true;
     }
-    
+
+    if (type === 'DeassignPermissionGroup') {
+      if (data === 'AccountNotFound') {
+        throw new ResourceNotFoundError({ type: 'account', id: uuid() });
+      }
+      if (data === 'PermissionGrouptNotFound') {
+        throw new ResourceNotFoundError({
+          type: 'permission_group',
+          id: uuid(),
+        });
+      }
+      if (data === 'AdminNotPermissionGroupOwner') {
+        throw new ResourceNotFoundError({
+          account: uuid(),
+          permissionGroup: uuid(),
+          admin: uuid(),
+        });
+      }
+      return true;
+    }
     }),
   ]);
 }
