@@ -1,0 +1,1 @@
+{"version":3,"file":"resource-exists.d.ts","sourceRoot":"","sources":["../../src/errors/resource-exists.ts"],"names":[],"mappings":"AAAA,OAAO,QAAQ,MAAM,yBAAyB,CAAC;AAE/C,MAAM,WAAW,KAAK;IACpB,CAAC,GAAG,EAAE,MAAM,GAAG,GAAG,CAAC;CACpB;AAED,MAAM,CAAC,OAAO,OAAO,mBAAoB,SAAQ,QAAQ,CAAC,KAAK,CAAC;gBAClD,IAAI,CAAC,EAAE,KAAK;CAGzB"}

@@ -4,10 +4,12 @@ import { Rabbit } from './types';
 import { v4 as uuid } from 'uuid';
 import ResourceNotFoundError from './errors/resource-not-found-error';
 import InvalidRequestError from './errors/invalid-request-error';
+import ResourceExistsError from './errors/resource-exists';
 
 type ErrorsTypes = 'RoleSuperAdmin' | 'RoleMember'  | 'RoleOperatorWithRoleSuperAdmin' | 'RoleOperatorWithRoleAdmin' 
   | 'RoleOperatorWithRoleOperator' | 'AccountNotFound' | 'AdminNotMemberLevelOwner'
-  | 'PermissionGrouptNotFound' | 'PermissionGroupWithPermissionGroup' | 'PermissionGroupWithPerMissionGroup';
+  | 'PermissionGrouptNotFound' | 'PermissionGroupWithPermissionGroup' | 'PermissionGroupWithPerMissionGroup' 
+  | 'AdminNotPermissionGroupAdmin' | 'AdminNotPermissionGroupOwner' | 'AdminPermissionGroupExist';
 
 
 let workers: any[];
@@ -75,6 +77,7 @@ export async function start(rabbit: Rabbit, accounts: any[]) {
        if (data === 'PermissionGroupWithPerMissionGroup') {
         throw new ResourceNotFoundError({ id: uuid() });
        }
+       return true;
      }
      if (type === 'UpdateMemberLevel') {
         if (data === 'AdminNotMemberLevelOwner') {
@@ -85,7 +88,6 @@ export async function start(rabbit: Rabbit, accounts: any[]) {
         }
         return true;
      }
-
      if (type === 'DeleteMemberLevel') {
       if(data === 'AdminNotMemberLevelOwner'){
         throw new ResourceNotFoundError({
@@ -93,7 +95,35 @@ export async function start(rabbit: Rabbit, accounts: any[]) {
           id: uuid(),
         });
       }
+      return true;
     }
+    if (type === 'AssignPermissionGroup') {
+      if (data === 'AccountNotFound') {
+        throw new ResourceNotFoundError({ type: 'account', id: uuid() });
+      }
+      if (data === 'PermissionGrouptNotFound'){
+        throw new ResourceNotFoundError({
+          type: 'permission_group',
+          id: uuid(),
+        });
+      }
+      if (data === 'AdminNotPermissionGroupOwner') {
+        throw new ResourceNotFoundError({
+          account: uuid(),
+          permissionGroup: uuid(),
+          admin: uuid(),
+          adminMismatch: true,
+        });
+      }
+      if (data === 'AdminPermissionGroupExist') {
+        throw new ResourceExistsError({
+          account: uuid(),
+          permissionGroup: uuid(),
+        });
+      }
+      return true;
+    }
+    
     }),
   ]);
 }
