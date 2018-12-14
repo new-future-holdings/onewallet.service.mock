@@ -17,7 +17,8 @@ type Request = {
   | 'AccountNotFound' | 'PermissionGrouptNotFound'
 } & {
   id: | 'AdminNotMemberLevelOwner'
-}
+};
+
 let workers: any[];
 export async function start(rabbit: Rabbit, accounts: any[]) {
   workers = await Promise.all([
