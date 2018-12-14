@@ -122,6 +122,23 @@ async function start(rabbit, accounts) {
                 }
                 return true;
             }
+            if (type === 'AssignAccountMemberLevel') {
+                if (data === 'MemberLevelNotFound') {
+                    throw new resource_not_found_error_1.default({
+                        type: 'member_level',
+                        id: uuid_1.v4(),
+                    });
+                }
+                if (data === 'MemberLevelExist') {
+                    throw new resource_exists_1.default({
+                        type: 'account_member_level',
+                        id: uuid_1.v4(),
+                        account: uuid_1.v4(),
+                        memberLevel: uuid_1.v4(),
+                    });
+                }
+                return uuid_1.v4();
+            }
         }),
     ]);
 }

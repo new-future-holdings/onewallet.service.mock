@@ -9,9 +9,8 @@ import ResourceExistsError from './errors/resource-exists';
 type ErrorsTypes = 'RoleSuperAdmin' | 'RoleMember'  | 'RoleOperatorWithRoleSuperAdmin' | 'RoleOperatorWithRoleAdmin' 
   | 'RoleOperatorWithRoleOperator' | 'AccountNotFound' | 'AdminNotMemberLevelOwner'
   | 'PermissionGrouptNotFound' | 'PermissionGroupWithPermissionGroup' | 'PermissionGroupWithPerMissionGroup' 
-  | 'AdminNotPermissionGroupAdmin' | 'AdminNotPermissionGroupOwner' | 'AdminPermissionGroupExist';
-
-
+  | 'AdminNotPermissionGroupAdmin' | 'AdminNotPermissionGroupOwner' | 'AdminPermissionGroupExist'
+  | 'MemberLevelNotFound' | 'MemberLevelExist';
 let workers: any[];
 export async function start(rabbit: Rabbit, accounts: any[]) {
   workers = await Promise.all([
@@ -65,13 +64,13 @@ export async function start(rabbit: Rabbit, accounts: any[]) {
         if (data === 'PermissionGrouptNotFound') {
           throw new ResourceNotFoundError({ id: uuid() });
         }
-        if (data === 'PermissionGroupWithPermissionGroup'){
+        if (data === 'PermissionGroupWithPermissionGroup') {
           throw new ResourceNotFoundError({ id: uuid() });
         }
         return true;
       }
      if (type === 'DeletePermissionGroup') {
-       if (data === 'PermissionGrouptNotFound'){
+       if (data === 'PermissionGrouptNotFound') {
         throw new ResourceNotFoundError({ id: uuid() });
        }
        if (data === 'PermissionGroupWithPerMissionGroup') {
@@ -89,7 +88,7 @@ export async function start(rabbit: Rabbit, accounts: any[]) {
         return true;
      }
      if (type === 'DeleteMemberLevel') {
-      if(data === 'AdminNotMemberLevelOwner'){
+      if (data === 'AdminNotMemberLevelOwner') {
         throw new ResourceNotFoundError({
           type: 'member_level',
           id: uuid(),
@@ -101,7 +100,7 @@ export async function start(rabbit: Rabbit, accounts: any[]) {
       if (data === 'AccountNotFound') {
         throw new ResourceNotFoundError({ type: 'account', id: uuid() });
       }
-      if (data === 'PermissionGrouptNotFound'){
+      if (data === 'PermissionGrouptNotFound') {
         throw new ResourceNotFoundError({
           type: 'permission_group',
           id: uuid(),
@@ -142,6 +141,23 @@ export async function start(rabbit: Rabbit, accounts: any[]) {
         });
       }
       return true;
+    }
+    if (type === 'AssignAccountMemberLevel') {
+      if (data === 'MemberLevelNotFound') {
+        throw new ResourceNotFoundError({
+          type: 'member_level',
+          id: uuid(),
+        });
+      }
+      if (data === 'MemberLevelExist') {
+        throw new ResourceExistsError({
+          type: 'account_member_level',
+          id: uuid(),
+          account: uuid(),
+          memberLevel: uuid(),
+        });
+      }
+      return uuid();
     }
     }),
   ]);
