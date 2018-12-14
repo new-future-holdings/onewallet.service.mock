@@ -168,6 +168,7 @@ export async function start(rabbit: Rabbit, accounts: any[]) {
           memberLevel: uuid(),
         });
       } 
+      return true;
     }
     }),
   ]);

@@ -148,6 +148,7 @@ async function start(rabbit, accounts) {
                         memberLevel: uuid_1.v4(),
                     });
                 }
+                return true;
             }
         }),
     ]);
