@@ -18,76 +18,40 @@ async function start(rabbit, accounts) {
         }),
         rabbit.createWorker('Account.Command', async function handleCommand({ type, data }) {
             if (type === 'CreateAccount') {
-                if (data === 'RoleSuperAdmin') {
+                if (data.username === 'RoleSuperAdmin') {
                     throw new invalid_request_error_1.default('Cannot create account with role `super_admin`.', { invalidRole: true });
                 }
-                if (data === 'RoleMember') {
+                if (data.username === 'RoleMember') {
                     throw new invalid_request_error_1.default('Accounts with `member` role cannot create account', { invalidRole: true });
                 }
-                if (data === 'RoleOperatorWithRoleAdmin') {
+                if (data.username === 'RoleOperatorWithRoleAdmin') {
                     throw new invalid_request_error_1.default('Operator cannot create account with role `admin`.', { invalidRole: true });
                 }
-                if (data === 'RoleOperatorWithRoleSuperAdmin') {
+                if (data.username === 'RoleOperatorWithRoleSuperAdmin') {
                     throw new invalid_request_error_1.default('Operator cannot create account with role `super_admin`.', { invalidRole: true });
                 }
-                if (data === 'RoleOperatorWithRoleOperator') {
+                if (data.username === 'RoleOperatorWithRoleOperator') {
                     throw new invalid_request_error_1.default('Operator cannot create account with role `operator`.', { invalidRole: true });
                 }
                 return true;
             }
             if (type === 'UpdateAccount') {
-                if (data === 'AccountNotFound') {
+                if (data.username === 'AccountNotFound') {
                     throw new resource_not_found_error_1.default({ type: 'user', id: uuid_1.v4() });
                 }
                 return true;
             }
-            if (type === 'UpdatePermissionGroup') {
-                if (data === 'PermissionGrouptNotFound') {
-                    throw new resource_not_found_error_1.default({ id: uuid_1.v4() });
-                }
-                if (data === 'PermissionGroupWithPermissionGroup') {
-                    throw new resource_not_found_error_1.default({ id: uuid_1.v4() });
-                }
-                return true;
-            }
-            if (type === 'DeletePermissionGroup') {
-                if (data === 'PermissionGrouptNotFound') {
-                    throw new resource_not_found_error_1.default({ id: uuid_1.v4() });
-                }
-                if (data === 'PermissionGroupWithPerMissionGroup') {
-                    throw new resource_not_found_error_1.default({ id: uuid_1.v4() });
-                }
-                return true;
-            }
-            if (type === 'UpdateMemberLevel') {
-                if (data === 'AdminNotMemberLevelOwner') {
-                    throw new resource_not_found_error_1.default({
-                        type: 'member_level',
-                        id: uuid_1.v4(),
-                    });
-                }
-                return true;
-            }
-            if (type === 'DeleteMemberLevel') {
-                if (data === 'AdminNotMemberLevelOwner') {
-                    throw new resource_not_found_error_1.default({
-                        type: 'member_level',
-                        id: uuid_1.v4(),
-                    });
-                }
-                return true;
-            }
             if (type === 'AssignPermissionGroup') {
-                if (data === 'AccountNotFound') {
+                if (data.account === 'AccountNotFound') {
                     throw new resource_not_found_error_1.default({ type: 'account', id: uuid_1.v4() });
                 }
-                if (data === 'PermissionGrouptNotFound') {
+                if (data.account === 'PermissionGrouptNotFound') {
                     throw new resource_not_found_error_1.default({
                         type: 'permission_group',
                         id: uuid_1.v4(),
                     });
                 }
-                if (data === 'AdminNotPermissionGroupOwner') {
+                if (data.account === 'AdminNotPermissionGroupOwner') {
                     throw new resource_not_found_error_1.default({
                         account: uuid_1.v4(),
                         permissionGroup: uuid_1.v4(),
@@ -95,7 +59,7 @@ async function start(rabbit, accounts) {
                         adminMismatch: true,
                     });
                 }
-                if (data === 'AdminPermissionGroupExist') {
+                if (data.account === 'AdminPermissionGroupExist') {
                     throw new resource_exists_1.default({
                         account: uuid_1.v4(),
                         permissionGroup: uuid_1.v4(),
@@ -104,16 +68,16 @@ async function start(rabbit, accounts) {
                 return true;
             }
             if (type === 'DeassignPermissionGroup') {
-                if (data === 'AccountNotFound') {
+                if (data.account === 'AccountNotFound') {
                     throw new resource_not_found_error_1.default({ type: 'account', id: uuid_1.v4() });
                 }
-                if (data === 'PermissionGrouptNotFound') {
+                if (data.account === 'PermissionGrouptNotFound') {
                     throw new resource_not_found_error_1.default({
                         type: 'permission_group',
                         id: uuid_1.v4(),
                     });
                 }
-                if (data === 'AdminNotPermissionGroupOwner') {
+                if (data.account === 'AdminNotPermissionGroupOwner') {
                     throw new resource_not_found_error_1.default({
                         account: uuid_1.v4(),
                         permissionGroup: uuid_1.v4(),
@@ -122,14 +86,32 @@ async function start(rabbit, accounts) {
                 }
                 return true;
             }
+            if (type === 'UpdatePermissionGroup') {
+                if (data.admin === 'PermissionGrouptNotFound') {
+                    throw new resource_not_found_error_1.default({ id: uuid_1.v4() });
+                }
+                if (data.admin === 'PermissionGroupWithPerMissionGroup') {
+                    throw new resource_not_found_error_1.default({ id: uuid_1.v4() });
+                }
+                return true;
+            }
+            if (type === 'DeletePermissionGroup') {
+                if (data.admin === 'PermissionGrouptNotFound') {
+                    throw new resource_not_found_error_1.default({ id: uuid_1.v4() });
+                }
+                if (data.admin === 'PermissionGroupWithPerMissionGroup') {
+                    throw new resource_not_found_error_1.default({ id: uuid_1.v4() });
+                }
+                return true;
+            }
             if (type === 'AssignAccountMemberLevel') {
-                if (data === 'MemberLevelNotFound') {
+                if (data.account === 'MemberLevelNotFound') {
                     throw new resource_not_found_error_1.default({
                         type: 'member_level',
                         id: uuid_1.v4(),
                     });
                 }
-                if (data === 'MemberLevelExist') {
+                if (data.account === 'MemberLevelExist') {
                     throw new resource_exists_1.default({
                         type: 'account_member_level',
                         id: uuid_1.v4(),
@@ -140,7 +122,7 @@ async function start(rabbit, accounts) {
                 return uuid_1.v4();
             }
             if (type === 'DeassignAccountMemberLevel') {
-                if (data === 'AccountMemberLevelNotFound') {
+                if (data.account === 'AccountMemberLevelNotFound') {
                     throw new resource_not_found_error_1.default({
                         type: 'account_member_level',
                         id: uuid_1.v4(),
@@ -148,6 +130,25 @@ async function start(rabbit, accounts) {
                         memberLevel: uuid_1.v4(),
                     });
                 }
+                return true;
+            }
+            if (type === 'UpdateMemberLevel') {
+                if (data.id === 'AdminNotMemberLevelOwner') {
+                    throw new resource_not_found_error_1.default({
+                        type: 'member_level',
+                        id: uuid_1.v4(),
+                    });
+                }
+                return true;
+            }
+            if (type === 'DeleteMemberLevel') {
+                if (data.id === 'AdminNotMemberLevelOwner') {
+                    throw new resource_not_found_error_1.default({
+                        type: 'member_level',
+                        id: uuid_1.v4(),
+                    });
+                }
+                return true;
             }
         }),
     ]);
