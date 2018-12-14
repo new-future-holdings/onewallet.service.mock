@@ -10,7 +10,7 @@ type ErrorsTypes = 'RoleSuperAdmin' | 'RoleMember'  | 'RoleOperatorWithRoleSuper
   | 'RoleOperatorWithRoleOperator' | 'AccountNotFound' | 'AdminNotMemberLevelOwner'
   | 'PermissionGrouptNotFound' | 'PermissionGroupWithPermissionGroup' | 'PermissionGroupWithPerMissionGroup' 
   | 'AdminNotPermissionGroupAdmin' | 'AdminNotPermissionGroupOwner' | 'AdminPermissionGroupExist'
-  | 'MemberLevelNotFound' | 'MemberLevelExist';
+  | 'MemberLevelNotFound' | 'MemberLevelExist' | 'AccountMemberLevelNotFound';
 let workers: any[];
 export async function start(rabbit: Rabbit, accounts: any[]) {
   workers = await Promise.all([
@@ -158,6 +158,16 @@ export async function start(rabbit: Rabbit, accounts: any[]) {
         });
       }
       return uuid();
+    }
+    if (type === 'DeassignAccountMemberLevel') {
+      if (data === 'AccountMemberLevelNotFound') {
+        throw new ResourceNotFoundError({
+          type: 'account_member_level',
+          id: uuid(),
+          account: uuid(),
+          memberLevel: uuid(),
+        });
+      } 
     }
     }),
   ]);
