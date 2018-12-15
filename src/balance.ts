@@ -1,4 +1,5 @@
 import R from 'ramda';
+import Big from 'big.js';
 
 import { Rabbit } from './types';
 
@@ -24,7 +25,7 @@ export async function start(rabbit: Rabbit, initialBalances: Document[]) {
         if (!document) {
           return false;
         }
-        const balance = document.total + data.delta;
+        const balance = +new Big(document.total).add(data.delta);
         document.available = balance;
         document.total = balance;
         return true;

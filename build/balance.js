@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ramda_1 = __importDefault(require("ramda"));
+const big_js_1 = __importDefault(require("big.js"));
 let workers;
 let balances;
 exports.balances = balances;
@@ -21,7 +22,7 @@ async function start(rabbit, initialBalances) {
                 if (!document) {
                     return false;
                 }
-                const balance = document.total + data.delta;
+                const balance = +new big_js_1.default(document.total).add(data.delta);
                 document.available = balance;
                 document.total = balance;
                 return true;
