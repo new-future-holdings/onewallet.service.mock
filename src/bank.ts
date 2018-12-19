@@ -21,7 +21,7 @@ export async function start(rabbit: Rabbit) {
   workers = await Promise.all([
     rabbit.createWorker('Account.Query',
      async function handleCommand({type, data}: {type: string, data: Request}) {
-      if (type === 'can-withdraw') {
+      if (type === 'CanWithdraw') {
         if (data.account === 'AccountMemberLevelNotExists') {
           throw new InvalidRequestError(
             'No member level being assigned to the account',
@@ -63,6 +63,22 @@ export async function start(rabbit: Rabbit) {
           minimumSingleWithdrawalLimit: 123;
           maximumSingleWithdrawalLimit: 123;
           maximumDailyWithdrawalLimit: 123;
+        });
+      }
+
+      if (type === 'DepositTransactions') {
+        return new Promise(() => {
+          id: uuid();
+          transaction: uuid();
+          account: uuid();
+          admin: uuid();
+          bankName: uuid();
+          accountName: uuid();
+          accountNumber: uuid();
+          amount: uuid();
+          reference: uuid();
+          status: uuid();
+          timestamp: uuid();
         });
       }
     }),
