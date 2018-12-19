@@ -26,7 +26,7 @@ export async function start(rabbit: Rabbit, accounts: any[]) {
       if (type === 'Information') {
         return R.find(R.propEq('id', data.id))(accounts) || null;
       }
-    }),
+    }), 
     rabbit.createWorker('Account.Command',
      async function handleCommand ({ type, data }: { type: string, data: Request }) {
       if (type === 'CreateAccount') {
