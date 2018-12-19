@@ -3,17 +3,49 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const ramda_1 = __importDefault(require("ramda"));
 const uuid_1 = require("uuid");
 const resource_not_found_error_1 = __importDefault(require("./errors/resource-not-found-error"));
 const invalid_request_error_1 = __importDefault(require("./errors/invalid-request-error"));
 const resource_exists_1 = __importDefault(require("./errors/resource-exists"));
 let workers;
-async function start(rabbit, accounts) {
+async function start(rabbit) {
     workers = await Promise.all([
-        rabbit.createWorker('Account.Query', async ({ type, data }) => {
-            if (type === 'Information') {
-                return ramda_1.default.find(ramda_1.default.propEq('id', data.id))(accounts) || null;
+        rabbit.createWorker('Account.Query', async function handleCommand({ type, data }) {
+            if (type === 'can-withdraw') {
+                if (data.account === 'AccountMemberLevelNotExists') {
+                    throw new invalid_request_error_1.default('No member level being assigned to the account', {
+                        noMemberLevel: true,
+                    });
+                }
+                if (data.account === 'HighPointMemberlLevelNotExists') {
+                    throw new invalid_request_error_1.default('No member level being assigned to the account', {
+                        noMemberLevel: true,
+                    });
+                }
+                if (data.account === 'AmountIsGreaterThanCurrentAmount') {
+                    throw new invalid_request_error_1.default('Withdrawal amount is not in range.', {
+                        amount: 123.2,
+                        minimumWithdrawal: 120.2,
+                        maximumWithdrawal: 123.3,
+                    });
+                }
+                if (data.account === 'DailyWithdrawalExceed') {
+                    throw new invalid_request_error_1.default('Maximum daily withdrawal exceed', {
+                        withdrawals: 200.2,
+                        maximum: 300.5,
+                    });
+                }
+                return new Promise(() => {
+                    id: uuid_1.v4;
+                    admin: uuid_1.v4();
+                    name: uuid_1.v4();
+                    description: uuid_1.v4();
+                    handlingFeeType: 'PERCENTAGE';
+                    handlingFee: 123;
+                    minimumSingleWithdrawalLimit: 123;
+                    maximumSingleWithdrawalLimit: 123;
+                    maximumDailyWithdrawalLimit: 123;
+                });
             }
         }),
         rabbit.createWorker('Account.Command', async function handleCommand({ type, data }) {
@@ -48,7 +80,7 @@ async function start(rabbit, accounts) {
                 return true;
             }
             if (type === 'CreateDeposit') {
-                if (data.account === 'AccountExists') {
+                if (data.account === 'AccountNotExists') {
                     throw new resource_exists_1.default({
                         id: uuid_1.v4(),
                         type: 'deposit',
@@ -57,7 +89,7 @@ async function start(rabbit, accounts) {
                 return true;
             }
             if (type === 'FulfillDeposit') {
-                if (data.account === 'AccountExists') {
+                if (data.account === 'AccountNotExists') {
                     throw new resource_not_found_error_1.default({
                         id: uuid_1.v4(),
                         type: 'deposit',
