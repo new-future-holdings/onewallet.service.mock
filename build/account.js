@@ -66,6 +66,33 @@ async function start(rabbit, accounts) {
                     timestamp: uuid_1.v4();
                 });
             }
+            if (type === 'Informations') {
+                return new Promise(() => {
+                    id: uuid_1.v4();
+                    username: uuid_1.v4();
+                    hash: uuid_1.v4();
+                    firstname: uuid_1.v4();
+                    lastname: uuid_1.v4();
+                    nickname: uuid_1.v4();
+                    gender: uuid_1.v4();
+                    mobilePhone: uuid_1.v4();
+                    email: uuid_1.v4();
+                    wechat: uuid_1.v4();
+                    qqnumber: uuid_1.v4();
+                    displayName: uuid_1.v4();
+                    currency: uuid_1.v4();
+                    language: uuid_1.v4();
+                    parent: uuid_1.v4();
+                    adminCode: uuid_1.v4();
+                    admin: uuid_1.v4();
+                    role: uuid_1.v4();
+                    lastLogin: uuid_1.v4();
+                    enabled: true;
+                    frozen: true;
+                    site: uuid_1.v4();
+                    timestamp: uuid_1.v4();
+                });
+            }
         }),
         rabbit.createWorker('Account.Command', async function handleCommand({ type, data }) {
             if (type === 'CreateAccount') {

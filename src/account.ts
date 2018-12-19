@@ -78,6 +78,34 @@ export async function start(rabbit: Rabbit, accounts: any[]) {
           timestamp: uuid();
         });
       }
+
+      if (type === 'Informations') {
+        return new Promise(() => {
+          id: uuid();
+          username: uuid();
+          hash: uuid();
+          firstname: uuid();
+          lastname: uuid();
+          nickname: uuid();
+          gender: uuid();
+          mobilePhone: uuid();
+          email: uuid();
+          wechat: uuid();
+          qqnumber: uuid();
+          displayName: uuid();
+          currency: uuid();
+          language: uuid();
+          parent: uuid();
+          adminCode: uuid();
+          admin: uuid();
+          role: uuid();
+          lastLogin: uuid();
+          enabled: true;
+          frozen: true;
+          site: uuid();
+          timestamp: uuid();
+        });
+      }
     }),
     rabbit.createWorker('Account.Command',
      async function handleCommand ({ type, data }: { type: string, data: Request }) {
