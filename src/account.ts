@@ -14,7 +14,7 @@ type Request = {
 } & {
   account: 'AdminNotPermissionGroupAdmin' | 'AdminNotPermissionGroupOwner' | 'AdminPermissionGroupExist' 
   | 'MemberLevelNotFound' | 'MemberLevelExist' | 'AccountMemberLevelNotFound' 
-  | 'AccountNotFound' | 'PermissionGrouptNotFound'
+  | 'AccountNotFound' | 'PermissionGrouptNotFound' | 'AccountInvalidCredentials'
 } & {
   id: | 'AdminNotMemberLevelOwner'
 };
@@ -42,7 +42,43 @@ export async function start(rabbit: Rabbit, accounts: any[]) {
           indexes: uuid(),
         }]);
       }
-    }), 
+
+      if (type === 'Authenticate') {
+        if (data.account === 'AccountNotFound') {
+          throw new ResourceNotFoundError({ username: uuid() });
+        }
+        if (data.account === 'AccountInvalidCredentials') {
+          throw new InvalidRequestError('Invalid credentials', {
+            invalidCredentials: true,
+          });
+        }
+        return new Promise(() => {
+          id: uuid();
+          username: uuid();
+          hash: uuid();
+          firstname: uuid();
+          lastname: uuid();
+          nickname: uuid();
+          gender: uuid();
+          mobilePhone: uuid();
+          email: uuid();
+          wechat: uuid();
+          qqnumber: uuid();
+          displayName: uuid();
+          currency: uuid();
+          language: uuid();
+          parent: uuid();
+          adminCode: uuid();
+          admin: uuid();
+          role: uuid();
+          lastLogin: uuid();
+          enabled: true;
+          frozen: true;
+          site: uuid();
+          timestamp: uuid();
+        });
+      }
+    }),
     rabbit.createWorker('Account.Command',
      async function handleCommand ({ type, data }: { type: string, data: Request }) {
       if (type === 'CreateAccount') {
