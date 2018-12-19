@@ -15,6 +15,22 @@ async function start(rabbit, accounts) {
             if (type === 'Information') {
                 return ramda_1.default.find(ramda_1.default.propEq('id', data.id))(accounts) || null;
             }
+            if (type === 'AccountMemberLevels') {
+                return new Promise(() => [{
+                        id: uuid_1.v4(),
+                        admin: uuid_1.v4(),
+                        name: uuid_1.v4(),
+                        description: uuid_1.v4(),
+                        handlingFeeType: uuid_1.v4(),
+                        handlingFee: uuid_1.v4(),
+                        minimumSingleWithdrawalLimit: uuid_1.v4(),
+                        maximumSingleWithdrawalLimit: uuid_1.v4(),
+                        maximumDailyWithdrawalLimit: uuid_1.v4(),
+                        tableName: uuid_1.v4(),
+                        timestamps: false,
+                        indexes: uuid_1.v4(),
+                    }]);
+            }
         }),
         rabbit.createWorker('Account.Command', async function handleCommand({ type, data }) {
             if (type === 'CreateAccount') {

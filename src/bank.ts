@@ -30,6 +30,7 @@ export async function start(rabbit: Rabbit) {
             }
           );
         }
+        
         if (data.account === 'HighPointMemberlLevelNotExists') {
           throw new InvalidRequestError(
             'No member level being assigned to the account',
@@ -81,8 +82,6 @@ export async function start(rabbit: Rabbit) {
           timestamp: uuid();
         });
       }
-
-
 
       if (type === 'PaymentMethodMemberLevels') {
         return new Promise(() => {
