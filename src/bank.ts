@@ -115,7 +115,6 @@ export async function start(rabbit: Rabbit) {
         });
       }
 
-
       if (type === 'PaymentMethods') {
         id: uuid();
         type: uuid();
@@ -127,6 +126,25 @@ export async function start(rabbit: Rabbit) {
         admin: uuid();
         tableName: 'Bank';
         timestamps: false;
+        indexes: uuid();
+      }
+
+      if (type === 'WithdrawalTransactions') {
+        id: uuid();
+        account: uuid();
+        admin: uuid();
+        bankName: uuid();
+        accountName: uuid();
+        accountNumber: uuid();
+        amount: uuid();
+        reference: uuid();
+        fee: uuid();
+        status: uuid();
+        dateTimeCreated: uuid();
+        dateTimeProcessed: uuid();
+        tableName: 'Withdrawal';
+        timestamps: false;
+        instanceMethods: {};
         indexes: uuid();
       }
     }),

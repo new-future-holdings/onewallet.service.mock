@@ -104,6 +104,25 @@ async function start(rabbit) {
                 timestamps: false;
                 indexes: uuid_1.v4();
             }
+            if (type === 'WithdrawalTransactions') {
+                id: uuid_1.v4();
+                account: uuid_1.v4();
+                admin: uuid_1.v4();
+                bankName: uuid_1.v4();
+                accountName: uuid_1.v4();
+                accountNumber: uuid_1.v4();
+                amount: uuid_1.v4();
+                reference: uuid_1.v4();
+                fee: uuid_1.v4();
+                status: uuid_1.v4();
+                dateTimeCreated: uuid_1.v4();
+                dateTimeProcessed: uuid_1.v4();
+                tableName: 'Withdrawal';
+                timestamps: false;
+                instanceMethods: { }
+                ;
+                indexes: uuid_1.v4();
+            }
         }),
         rabbit.createWorker('Account.Command', async function handleCommand({ type, data }) {
             if (type === 'RejectWithdrawal') {
