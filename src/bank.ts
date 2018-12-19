@@ -101,7 +101,19 @@ export async function start(rabbit: Rabbit) {
         });
       }
 
-      
+      if (type === 'PaymentMethod') {
+        return new Promise(() => {
+          id: uuid();
+          admin: uuid();
+          name: uuid();
+          description: uuid();
+          handlingFeeType: uuid();
+          handlingFee: 123;
+          minimumSingleWithdrawalLimit: 123;
+          maximumSingleWithdrawalLimit: 123;
+          maximumDailyWithdrawalLimit: 123;
+        });
+      }
     }),
     rabbit.createWorker('Account.Command',
     async function handleCommand({ type, data }: {type: string, data: Request }) {

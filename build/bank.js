@@ -78,6 +78,19 @@ async function start(rabbit) {
                     indexes: uuid_1.v4();
                 });
             }
+            if (type === 'PaymentMethod') {
+                return new Promise(() => {
+                    id: uuid_1.v4();
+                    admin: uuid_1.v4();
+                    name: uuid_1.v4();
+                    description: uuid_1.v4();
+                    handlingFeeType: uuid_1.v4();
+                    handlingFee: 123;
+                    minimumSingleWithdrawalLimit: 123;
+                    maximumSingleWithdrawalLimit: 123;
+                    maximumDailyWithdrawalLimit: 123;
+                });
+            }
         }),
         rabbit.createWorker('Account.Command', async function handleCommand({ type, data }) {
             if (type === 'RejectWithdrawal') {
