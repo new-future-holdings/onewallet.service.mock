@@ -114,6 +114,21 @@ export async function start(rabbit: Rabbit) {
           maximumDailyWithdrawalLimit: 123;
         });
       }
+
+
+      if (type === 'PaymentMethods') {
+        id: uuid();
+        type: uuid();
+        bankName: uuid();
+        accountName: uuid();
+        accountNumber: uuid();
+        enabled: uuid();
+        rules: uuid();
+        admin: uuid();
+        tableName: 'Bank';
+        timestamps: false;
+        indexes: uuid();
+      }
     }),
     rabbit.createWorker('Account.Command',
     async function handleCommand({ type, data }: {type: string, data: Request }) {
