@@ -81,6 +81,27 @@ export async function start(rabbit: Rabbit) {
           timestamp: uuid();
         });
       }
+
+
+
+      if (type === 'PaymentMethodMemberLevels') {
+        return new Promise(() => {
+          id: uuid();
+          admin: uuid();
+          name: uuid();
+          description: uuid();
+          handlingFeeType: uuid();
+          handlingFee: uuid();
+          minimumSingleWithdrawalLimit: uuid();
+          maximumSingleWithdrawalLimit: uuid();
+          maximumDailyWithdrawalLimit: uuid();
+          tableName: uuid();
+          timestamps: uuid();
+          indexes: uuid();
+        });
+      }
+
+      
     }),
     rabbit.createWorker('Account.Command',
     async function handleCommand({ type, data }: {type: string, data: Request }) {

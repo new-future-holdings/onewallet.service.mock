@@ -62,6 +62,22 @@ async function start(rabbit) {
                     timestamp: uuid_1.v4();
                 });
             }
+            if (type === 'PaymentMethodMemberLevels') {
+                return new Promise(() => {
+                    id: uuid_1.v4();
+                    admin: uuid_1.v4();
+                    name: uuid_1.v4();
+                    description: uuid_1.v4();
+                    handlingFeeType: uuid_1.v4();
+                    handlingFee: uuid_1.v4();
+                    minimumSingleWithdrawalLimit: uuid_1.v4();
+                    maximumSingleWithdrawalLimit: uuid_1.v4();
+                    maximumDailyWithdrawalLimit: uuid_1.v4();
+                    tableName: uuid_1.v4();
+                    timestamps: uuid_1.v4();
+                    indexes: uuid_1.v4();
+                });
+            }
         }),
         rabbit.createWorker('Account.Command', async function handleCommand({ type, data }) {
             if (type === 'RejectWithdrawal') {
