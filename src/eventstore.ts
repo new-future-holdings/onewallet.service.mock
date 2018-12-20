@@ -15,7 +15,6 @@ export function addEvent(data: Event) {
     id: generateEventId(),
     timestamp: Date.now(),
   };
-
   events.push(event);
   return event;
 }

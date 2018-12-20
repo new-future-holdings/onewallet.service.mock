@@ -16,20 +16,8 @@ async function start(rabbit, accounts) {
                 return ramda_1.default.find(ramda_1.default.propEq('id', data.id))(accounts) || null;
             }
             if (type === 'AccountMemberLevels') {
-                return [{
-                        id: uuid_1.v4(),
-                        admin: uuid_1.v4(),
-                        name: uuid_1.v4(),
-                        description: uuid_1.v4(),
-                        handlingFeeType: uuid_1.v4(),
-                        handlingFee: uuid_1.v4(),
-                        minimumSingleWithdrawalLimit: uuid_1.v4(),
-                        maximumSingleWithdrawalLimit: uuid_1.v4(),
-                        maximumDailyWithdrawalLimit: uuid_1.v4(),
-                        tableName: uuid_1.v4(),
-                        timestamps: false,
-                        indexes: uuid_1.v4(),
-                    }];
+                return [Object.assign({}, ['id', 'admin', 'name', 'description', 'handlingFeeType', 'handlingFee', 'tableName', 'indexes']
+                        .reduce((acc, curr) => Object.assign((acc), { [curr]: Math.random() }), {}), { minimumSingleWithdrawalLimit: 110.2, maximumSingleWithdrawalLimit: 120.2, maximumDailyWithdrawalLimit: 200.1, timestamps: false })];
             }
             if (type === 'Authenticate') {
                 if (data.account === 'AccountNotFound') {
@@ -40,74 +28,25 @@ async function start(rabbit, accounts) {
                         invalidCredentials: true,
                     });
                 }
-                return {
-                    id: uuid_1.v4(),
-                    username: uuid_1.v4(),
-                    hash: uuid_1.v4(),
-                    firstname: uuid_1.v4(),
-                    lastname: uuid_1.v4(),
-                    nickname: uuid_1.v4(),
-                    gender: uuid_1.v4(),
-                    mobilePhone: uuid_1.v4(),
-                    email: uuid_1.v4(),
-                    wechat: uuid_1.v4(),
-                    qqnumber: uuid_1.v4(),
-                    displayName: uuid_1.v4(),
-                    currency: uuid_1.v4(),
-                    language: uuid_1.v4(),
-                    parent: uuid_1.v4(),
-                    adminCode: uuid_1.v4(),
-                    admin: uuid_1.v4(),
-                    role: uuid_1.v4(),
-                    lastLogin: uuid_1.v4(),
-                    enabled: true,
-                    frozen: true,
-                    site: uuid_1.v4(),
-                    timestamp: uuid_1.v4(),
-                };
+                return Object.assign({}, ['id', 'username', 'firstname', 'lastname', 'nickname', 'email', 'currency', 'languange', 'parent',
+                    'admin', 'mobilePhone', 'wechat', 'qqnumber', 'gender', 'displayName', 'adminCode', 'role', 'site',
+                    'indexes', 'hooks']
+                    .reduce((acc, curr) => Object.assign(acc, { [curr]: Math.random() }), {}), { enabled: true, frozen: true, lastLogin: Date.now().toString(), timestamp: Date.now().toString() });
             }
             if (type === 'Informations') {
-                return {
-                    id: uuid_1.v4(),
-                    username: uuid_1.v4(),
-                    hash: uuid_1.v4(),
-                    firstname: uuid_1.v4(),
-                    lastname: uuid_1.v4(),
-                    nickname: uuid_1.v4(),
-                    gender: uuid_1.v4(),
-                    mobilePhone: uuid_1.v4(),
-                    email: uuid_1.v4(),
-                    wechat: uuid_1.v4(),
-                    qqnumber: uuid_1.v4(),
-                    displayName: uuid_1.v4(),
-                    currency: uuid_1.v4(),
-                    language: uuid_1.v4(),
-                    parent: uuid_1.v4(),
-                    adminCode: uuid_1.v4(),
-                    admin: uuid_1.v4(),
-                    role: uuid_1.v4(),
-                    lastLogin: uuid_1.v4(),
-                    enabled: true,
-                    frozen: true,
-                    site: uuid_1.v4(),
-                    timestamp: uuid_1.v4(),
-                };
+                return Object.assign({}, ['id', 'username', 'firstname', 'lastname', 'nickname', 'email', 'currency', 'languange', 'parent',
+                    'admin', 'mobilePhone', 'wechat', 'qqnumber', 'gender', 'displayName', 'adminCode', 'role', 'site',
+                    'indexes', 'hooks']
+                    .reduce((acc, curr) => Object.assign(acc, { [curr]: Math.random() }), {}), { enabled: true, frozen: true, lastLogin: Date.now().toString(), timestamp: Date.now().toString() });
             }
             if (type === 'MemberLevels') {
-                return {
-                    id: uuid_1.v4(),
-                    admin: uuid_1.v4(),
-                    name: uuid_1.v4(),
-                    description: uuid_1.v4(),
-                    handlingFeeType: 'PERCENTAGE',
-                    handlingFee: 123.2,
-                    minimumSingleWithdrawalLimit: 123.2,
-                    maximumSingleWithdrawalLimit: 123.2,
-                    maximumDailyWithdrawalLimit: 200.1,
-                    tableName: 'MemberLevel',
-                    timestamps: false,
-                    indexes: uuid_1.v4(),
-                };
+                return Object.assign({}, ['id', 'admin', 'name', 'description', 'indexes'].reduce((acc, curr) => Object.assign(acc, { [curr]: Math.random() }), {}), { handlingFeeType: 'PERCENTAGE', handlingFee: 123.2, minimumSingleWithdrawalLimit: 123.2, maximumSingleWithdrawalLimit: 123.2, maximumDailyWithdrawalLimit: 200.1, tableName: 'MemberLevel', timestamps: false });
+            }
+            if (type === '') {
+                return [Object.assign({}, ['id', 'username', 'firstname', 'lastname', 'nickname', 'email', 'currency', 'languange', 'parent',
+                        'admin', 'mobilePhone', 'wechat', 'qqnumber', 'gender', 'displayName', 'adminCode', 'role', 'site',
+                        'indexes', 'hooks']
+                        .reduce((acc, curr) => Object.assign(acc, { [curr]: Math.random() }), {}), { enabled: true, frozen: true, lastLogin: Date.now().toString(), timestamp: Date.now().toString() })];
             }
         }),
         rabbit.createWorker('Account.Command', async function handleCommand({ type, data }) {
