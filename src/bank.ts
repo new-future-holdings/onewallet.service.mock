@@ -128,7 +128,7 @@ export async function start(rabbit: Rabbit) {
           tableName: 'Bank',
           timestamps: false,
           indexes: uuid(),
-        }
+        };
       }
 
       if (type === 'WithdrawalTransactions') {
@@ -148,7 +148,7 @@ export async function start(rabbit: Rabbit) {
           tableName: 'Withdrawal',
           timestamps: false,
           indexes: uuid(),
-        }
+        };
       }
     }),
     rabbit.createWorker('Bank.Command',
