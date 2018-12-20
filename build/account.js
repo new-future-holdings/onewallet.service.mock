@@ -16,7 +16,7 @@ async function start(rabbit, accounts) {
                 return ramda_1.default.find(ramda_1.default.propEq('id', data.id))(accounts) || null;
             }
             if (type === 'AccountMemberLevels') {
-                return new Promise(() => [{
+                return [{
                         id: uuid_1.v4(),
                         admin: uuid_1.v4(),
                         name: uuid_1.v4(),
@@ -29,7 +29,7 @@ async function start(rabbit, accounts) {
                         tableName: uuid_1.v4(),
                         timestamps: false,
                         indexes: uuid_1.v4(),
-                    }]);
+                    }];
             }
             if (type === 'Authenticate') {
                 if (data.account === 'AccountNotFound') {
@@ -40,58 +40,74 @@ async function start(rabbit, accounts) {
                         invalidCredentials: true,
                     });
                 }
-                return new Promise(() => {
-                    id: uuid_1.v4();
-                    username: uuid_1.v4();
-                    hash: uuid_1.v4();
-                    firstname: uuid_1.v4();
-                    lastname: uuid_1.v4();
-                    nickname: uuid_1.v4();
-                    gender: uuid_1.v4();
-                    mobilePhone: uuid_1.v4();
-                    email: uuid_1.v4();
-                    wechat: uuid_1.v4();
-                    qqnumber: uuid_1.v4();
-                    displayName: uuid_1.v4();
-                    currency: uuid_1.v4();
-                    language: uuid_1.v4();
-                    parent: uuid_1.v4();
-                    adminCode: uuid_1.v4();
-                    admin: uuid_1.v4();
-                    role: uuid_1.v4();
-                    lastLogin: uuid_1.v4();
-                    enabled: true;
-                    frozen: true;
-                    site: uuid_1.v4();
-                    timestamp: uuid_1.v4();
-                });
+                return {
+                    id: uuid_1.v4(),
+                    username: uuid_1.v4(),
+                    hash: uuid_1.v4(),
+                    firstname: uuid_1.v4(),
+                    lastname: uuid_1.v4(),
+                    nickname: uuid_1.v4(),
+                    gender: uuid_1.v4(),
+                    mobilePhone: uuid_1.v4(),
+                    email: uuid_1.v4(),
+                    wechat: uuid_1.v4(),
+                    qqnumber: uuid_1.v4(),
+                    displayName: uuid_1.v4(),
+                    currency: uuid_1.v4(),
+                    language: uuid_1.v4(),
+                    parent: uuid_1.v4(),
+                    adminCode: uuid_1.v4(),
+                    admin: uuid_1.v4(),
+                    role: uuid_1.v4(),
+                    lastLogin: uuid_1.v4(),
+                    enabled: true,
+                    frozen: true,
+                    site: uuid_1.v4(),
+                    timestamp: uuid_1.v4(),
+                };
             }
             if (type === 'Informations') {
-                return new Promise(() => {
-                    id: uuid_1.v4();
-                    username: uuid_1.v4();
-                    hash: uuid_1.v4();
-                    firstname: uuid_1.v4();
-                    lastname: uuid_1.v4();
-                    nickname: uuid_1.v4();
-                    gender: uuid_1.v4();
-                    mobilePhone: uuid_1.v4();
-                    email: uuid_1.v4();
-                    wechat: uuid_1.v4();
-                    qqnumber: uuid_1.v4();
-                    displayName: uuid_1.v4();
-                    currency: uuid_1.v4();
-                    language: uuid_1.v4();
-                    parent: uuid_1.v4();
-                    adminCode: uuid_1.v4();
-                    admin: uuid_1.v4();
-                    role: uuid_1.v4();
-                    lastLogin: uuid_1.v4();
-                    enabled: true;
-                    frozen: true;
-                    site: uuid_1.v4();
-                    timestamp: uuid_1.v4();
-                });
+                return {
+                    id: uuid_1.v4(),
+                    username: uuid_1.v4(),
+                    hash: uuid_1.v4(),
+                    firstname: uuid_1.v4(),
+                    lastname: uuid_1.v4(),
+                    nickname: uuid_1.v4(),
+                    gender: uuid_1.v4(),
+                    mobilePhone: uuid_1.v4(),
+                    email: uuid_1.v4(),
+                    wechat: uuid_1.v4(),
+                    qqnumber: uuid_1.v4(),
+                    displayName: uuid_1.v4(),
+                    currency: uuid_1.v4(),
+                    language: uuid_1.v4(),
+                    parent: uuid_1.v4(),
+                    adminCode: uuid_1.v4(),
+                    admin: uuid_1.v4(),
+                    role: uuid_1.v4(),
+                    lastLogin: uuid_1.v4(),
+                    enabled: true,
+                    frozen: true,
+                    site: uuid_1.v4(),
+                    timestamp: uuid_1.v4(),
+                };
+            }
+            if (type === 'MemberLevels') {
+                return {
+                    id: uuid_1.v4(),
+                    admin: uuid_1.v4(),
+                    name: uuid_1.v4(),
+                    description: uuid_1.v4(),
+                    handlingFeeType: 'PERCENTAGE',
+                    handlingFee: 123.2,
+                    minimumSingleWithdrawalLimit: 123.2,
+                    maximumSingleWithdrawalLimit: 123.2,
+                    maximumDailyWithdrawalLimit: 200.1,
+                    tableName: 'MemberLevel',
+                    timestamps: false,
+                    indexes: uuid_1.v4(),
+                };
             }
         }),
         rabbit.createWorker('Account.Command', async function handleCommand({ type, data }) {

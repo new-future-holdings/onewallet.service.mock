@@ -27,7 +27,7 @@ export async function start(rabbit: Rabbit, accounts: any[]) {
         return R.find(R.propEq('id', data.id))(accounts) || null;
       }
       if (type === 'AccountMemberLevels') {
-        return new Promise(() => [{
+        return  [{
           id: uuid(),
           admin: uuid(),
           name: uuid(),
@@ -40,7 +40,7 @@ export async function start(rabbit: Rabbit, accounts: any[]) {
           tableName: uuid(),
           timestamps: false,
           indexes: uuid(),
-        }]);
+        }];
       }
 
       if (type === 'Authenticate') {
@@ -52,60 +52,77 @@ export async function start(rabbit: Rabbit, accounts: any[]) {
             invalidCredentials: true,
           });
         }
-        return new Promise(() => {
-          id: uuid();
-          username: uuid();
-          hash: uuid();
-          firstname: uuid();
-          lastname: uuid();
-          nickname: uuid();
-          gender: uuid();
-          mobilePhone: uuid();
-          email: uuid();
-          wechat: uuid();
-          qqnumber: uuid();
-          displayName: uuid();
-          currency: uuid();
-          language: uuid();
-          parent: uuid();
-          adminCode: uuid();
-          admin: uuid();
-          role: uuid();
-          lastLogin: uuid();
-          enabled: true;
-          frozen: true;
-          site: uuid();
-          timestamp: uuid();
-        });
+        return {
+          id: uuid(),
+          username: uuid(),
+          hash: uuid(),
+          firstname: uuid(),
+          lastname: uuid(),
+          nickname: uuid(),
+          gender: uuid(),
+          mobilePhone: uuid(),
+          email: uuid(),
+          wechat: uuid(),
+          qqnumber: uuid(),
+          displayName: uuid(),
+          currency: uuid(),
+          language: uuid(),
+          parent: uuid(),
+          adminCode: uuid(),
+          admin: uuid(),
+          role: uuid(),
+          lastLogin: uuid(),
+          enabled: true,
+          frozen: true,
+          site: uuid(),
+          timestamp: uuid(),
+        };
       }
 
       if (type === 'Informations') {
-        return new Promise(() => {
-          id: uuid();
-          username: uuid();
-          hash: uuid();
-          firstname: uuid();
-          lastname: uuid();
-          nickname: uuid();
-          gender: uuid();
-          mobilePhone: uuid();
-          email: uuid();
-          wechat: uuid();
-          qqnumber: uuid();
-          displayName: uuid();
-          currency: uuid();
-          language: uuid();
-          parent: uuid();
-          adminCode: uuid();
-          admin: uuid();
-          role: uuid();
-          lastLogin: uuid();
-          enabled: true;
-          frozen: true;
-          site: uuid();
-          timestamp: uuid();
-        });
+        return {
+          id: uuid(),
+          username: uuid(),
+          hash: uuid(),
+          firstname: uuid(),
+          lastname: uuid(),
+          nickname: uuid(),
+          gender: uuid(),
+          mobilePhone: uuid(),
+          email: uuid(),
+          wechat: uuid(),
+          qqnumber: uuid(),
+          displayName: uuid(),
+          currency: uuid(),
+          language: uuid(),
+          parent: uuid(),
+          adminCode: uuid(),
+          admin: uuid(),
+          role: uuid(),
+          lastLogin: uuid(),
+          enabled: true,
+          frozen: true,
+          site: uuid(),
+          timestamp: uuid(),
+        }
       }
+
+      if (type === 'MemberLevels') {
+        return {
+          id: uuid(),
+          admin: uuid(),
+          name: uuid(),
+          description: uuid(),
+          handlingFeeType: 'PERCENTAGE',
+          handlingFee: 123.2,
+          minimumSingleWithdrawalLimit: 123.2,
+          maximumSingleWithdrawalLimit: 123.2,
+          maximumDailyWithdrawalLimit: 200.1,
+          tableName: 'MemberLevel',
+          timestamps: false,
+          indexes: uuid(),
+        }
+      } 
     }),
     rabbit.createWorker('Account.Command',
      async function handleCommand ({ type, data }: { type: string, data: Request }) {
