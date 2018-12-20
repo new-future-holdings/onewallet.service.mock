@@ -55,96 +55,100 @@ export async function start(rabbit: Rabbit) {
             maximum: 300.5,
           });
         }
-        return new Promise(() => {
-          id: uuid;
-          admin: uuid();
-          name: uuid();
-          description: uuid();
-          handlingFeeType: 'PERCENTAGE';
-          handlingFee: 123;
-          minimumSingleWithdrawalLimit: 123;
-          maximumSingleWithdrawalLimit: 123;
-          maximumDailyWithdrawalLimit: 123;
-        });
+        return {
+          id: uuid,
+          admin: uuid(),
+          name: uuid(),
+          description: uuid(),
+          handlingFeeType: 'PERCENTAGE',
+          handlingFee: 123,
+          minimumSingleWithdrawalLimit: 123,
+          maximumSingleWithdrawalLimit: 123,
+          maximumDailyWithdrawalLimit: 123,
+        };
       }
 
       if (type === 'DepositTransactions') {
-        return new Promise(() => {
-          id: uuid();
-          transaction: uuid();
-          account: uuid();
-          admin: uuid();
-          bankName: uuid();
-          accountName: uuid();
-          accountNumber: uuid();
-          amount: uuid();
-          reference: uuid();
-          status: uuid();
-          timestamp: uuid();
-        });
+        return {
+          id: uuid(),
+          transaction: uuid(),
+          account: uuid(),
+          admin: uuid(),
+          bankName: uuid(),
+          accountName: uuid(),
+          accountNumber: uuid(),
+          amount: uuid(),
+          reference: uuid(),
+          status: uuid(),
+          timestamp: uuid(),
+        };
       }
 
       if (type === 'PaymentMethodMemberLevels') {
-        return new Promise(() => {
-          id: uuid();
-          admin: uuid();
-          name: uuid();
-          description: uuid();
-          handlingFeeType: uuid();
-          handlingFee: uuid();
-          minimumSingleWithdrawalLimit: uuid();
-          maximumSingleWithdrawalLimit: uuid();
-          maximumDailyWithdrawalLimit: uuid();
-          tableName: uuid();
-          timestamps: uuid();
-          indexes: uuid();
-        });
+        return {
+          id: uuid(),
+          admin: uuid(),
+          name: uuid(),
+          description: uuid(),
+          handlingFeeType: uuid(),
+          handlingFee: uuid(),
+          minimumSingleWithdrawalLimit: uuid(),
+          maximumSingleWithdrawalLimit: uuid(),
+          maximumDailyWithdrawalLimit: uuid(),
+          tableName: uuid(),
+          timestamps: uuid(),
+          indexes: uuid(),
+        };
       }
 
       if (type === 'PaymentMethod') {
-        return new Promise(() => {
-          id: uuid();
-          admin: uuid();
-          name: uuid();
-          description: uuid();
-          handlingFeeType: uuid();
-          handlingFee: 123;
-          minimumSingleWithdrawalLimit: 123;
-          maximumSingleWithdrawalLimit: 123;
-          maximumDailyWithdrawalLimit: 123;
-        });
+        return {
+          id: uuid(),
+          admin: uuid(),
+          name: uuid(),
+          description: uuid(),
+          handlingFeeType: uuid(),
+          handlingFee: 123,
+          minimumSingleWithdrawalLimit: 123,
+          maximumSingleWithdrawalLimit: 123,
+          maximumDailyWithdrawalLimit: 123,
+        };
       }
 
       if (type === 'PaymentMethods') {
-        id: uuid();
-        type: uuid();
-        bankName: uuid();
-        accountName: uuid();
-        accountNumber: uuid();
-        enabled: uuid();
-        rules: uuid();
-        admin: uuid();
-        tableName: 'Bank';
-        timestamps: false;
-        indexes: uuid();
+        return {
+          id: uuid(),
+          type: uuid(),
+          bankName: uuid(),
+          accountName: uuid(),
+          accountNumber: uuid(),
+          enabled: uuid(),
+          rules: uuid(),
+          admin: uuid(),
+          tableName: 'Bank',
+          timestamps: false,
+          indexes: uuid(),
+        }
       }
 
       if (type === 'WithdrawalTransactions') {
-        id: uuid();
-        account: uuid();
-        admin: uuid();
-        bankName: uuid();
-        accountName: uuid();
-        accountNumber: uuid();
-        amount: uuid();
-        reference: uuid();
-        fee: uuid();
-        status: uuid();
-        dateTimeCreated: uuid();
-        dateTimeProcessed: uuid();
-        tableName: 'Withdrawal';
-        timestamps: false;
-        indexes: uuid();
+        return {
+          id: uuid(),
+          account: uuid(),
+          admin: uuid(),
+          bankName: uuid(),
+          accountName: uuid(),
+          accountNumber: uuid(),
+          amount: uuid(),
+          reference: uuid(),
+          fee: uuid(),
+          status: uuid(),
+          dateTimeCreated: uuid(),
+          dateTimeProcessed: uuid(),
+          tableName: 'Withdrawal',
+          timestamps: false,
+          indexes: uuid(),
+        }
       }
     }),
     rabbit.createWorker('Bank.Command',

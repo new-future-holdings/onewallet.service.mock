@@ -35,91 +35,95 @@ async function start(rabbit) {
                         maximum: 300.5,
                     });
                 }
-                return new Promise(() => {
-                    id: uuid_1.v4;
-                    admin: uuid_1.v4();
-                    name: uuid_1.v4();
-                    description: uuid_1.v4();
-                    handlingFeeType: 'PERCENTAGE';
-                    handlingFee: 123;
-                    minimumSingleWithdrawalLimit: 123;
-                    maximumSingleWithdrawalLimit: 123;
-                    maximumDailyWithdrawalLimit: 123;
-                });
+                return {
+                    id: uuid_1.v4,
+                    admin: uuid_1.v4(),
+                    name: uuid_1.v4(),
+                    description: uuid_1.v4(),
+                    handlingFeeType: 'PERCENTAGE',
+                    handlingFee: 123,
+                    minimumSingleWithdrawalLimit: 123,
+                    maximumSingleWithdrawalLimit: 123,
+                    maximumDailyWithdrawalLimit: 123,
+                };
             }
             if (type === 'DepositTransactions') {
-                return new Promise(() => {
-                    id: uuid_1.v4();
-                    transaction: uuid_1.v4();
-                    account: uuid_1.v4();
-                    admin: uuid_1.v4();
-                    bankName: uuid_1.v4();
-                    accountName: uuid_1.v4();
-                    accountNumber: uuid_1.v4();
-                    amount: uuid_1.v4();
-                    reference: uuid_1.v4();
-                    status: uuid_1.v4();
-                    timestamp: uuid_1.v4();
-                });
+                return {
+                    id: uuid_1.v4(),
+                    transaction: uuid_1.v4(),
+                    account: uuid_1.v4(),
+                    admin: uuid_1.v4(),
+                    bankName: uuid_1.v4(),
+                    accountName: uuid_1.v4(),
+                    accountNumber: uuid_1.v4(),
+                    amount: uuid_1.v4(),
+                    reference: uuid_1.v4(),
+                    status: uuid_1.v4(),
+                    timestamp: uuid_1.v4(),
+                };
             }
             if (type === 'PaymentMethodMemberLevels') {
-                return new Promise(() => {
-                    id: uuid_1.v4();
-                    admin: uuid_1.v4();
-                    name: uuid_1.v4();
-                    description: uuid_1.v4();
-                    handlingFeeType: uuid_1.v4();
-                    handlingFee: uuid_1.v4();
-                    minimumSingleWithdrawalLimit: uuid_1.v4();
-                    maximumSingleWithdrawalLimit: uuid_1.v4();
-                    maximumDailyWithdrawalLimit: uuid_1.v4();
-                    tableName: uuid_1.v4();
-                    timestamps: uuid_1.v4();
-                    indexes: uuid_1.v4();
-                });
+                return {
+                    id: uuid_1.v4(),
+                    admin: uuid_1.v4(),
+                    name: uuid_1.v4(),
+                    description: uuid_1.v4(),
+                    handlingFeeType: uuid_1.v4(),
+                    handlingFee: uuid_1.v4(),
+                    minimumSingleWithdrawalLimit: uuid_1.v4(),
+                    maximumSingleWithdrawalLimit: uuid_1.v4(),
+                    maximumDailyWithdrawalLimit: uuid_1.v4(),
+                    tableName: uuid_1.v4(),
+                    timestamps: uuid_1.v4(),
+                    indexes: uuid_1.v4(),
+                };
             }
             if (type === 'PaymentMethod') {
-                return new Promise(() => {
-                    id: uuid_1.v4();
-                    admin: uuid_1.v4();
-                    name: uuid_1.v4();
-                    description: uuid_1.v4();
-                    handlingFeeType: uuid_1.v4();
-                    handlingFee: 123;
-                    minimumSingleWithdrawalLimit: 123;
-                    maximumSingleWithdrawalLimit: 123;
-                    maximumDailyWithdrawalLimit: 123;
-                });
+                return {
+                    id: uuid_1.v4(),
+                    admin: uuid_1.v4(),
+                    name: uuid_1.v4(),
+                    description: uuid_1.v4(),
+                    handlingFeeType: uuid_1.v4(),
+                    handlingFee: 123,
+                    minimumSingleWithdrawalLimit: 123,
+                    maximumSingleWithdrawalLimit: 123,
+                    maximumDailyWithdrawalLimit: 123,
+                };
             }
             if (type === 'PaymentMethods') {
-                id: uuid_1.v4();
-                type: uuid_1.v4();
-                bankName: uuid_1.v4();
-                accountName: uuid_1.v4();
-                accountNumber: uuid_1.v4();
-                enabled: uuid_1.v4();
-                rules: uuid_1.v4();
-                admin: uuid_1.v4();
-                tableName: 'Bank';
-                timestamps: false;
-                indexes: uuid_1.v4();
+                return {
+                    id: uuid_1.v4(),
+                    type: uuid_1.v4(),
+                    bankName: uuid_1.v4(),
+                    accountName: uuid_1.v4(),
+                    accountNumber: uuid_1.v4(),
+                    enabled: uuid_1.v4(),
+                    rules: uuid_1.v4(),
+                    admin: uuid_1.v4(),
+                    tableName: 'Bank',
+                    timestamps: false,
+                    indexes: uuid_1.v4(),
+                };
             }
             if (type === 'WithdrawalTransactions') {
-                id: uuid_1.v4();
-                account: uuid_1.v4();
-                admin: uuid_1.v4();
-                bankName: uuid_1.v4();
-                accountName: uuid_1.v4();
-                accountNumber: uuid_1.v4();
-                amount: uuid_1.v4();
-                reference: uuid_1.v4();
-                fee: uuid_1.v4();
-                status: uuid_1.v4();
-                dateTimeCreated: uuid_1.v4();
-                dateTimeProcessed: uuid_1.v4();
-                tableName: 'Withdrawal';
-                timestamps: false;
-                indexes: uuid_1.v4();
+                return {
+                    id: uuid_1.v4(),
+                    account: uuid_1.v4(),
+                    admin: uuid_1.v4(),
+                    bankName: uuid_1.v4(),
+                    accountName: uuid_1.v4(),
+                    accountNumber: uuid_1.v4(),
+                    amount: uuid_1.v4(),
+                    reference: uuid_1.v4(),
+                    fee: uuid_1.v4(),
+                    status: uuid_1.v4(),
+                    dateTimeCreated: uuid_1.v4(),
+                    dateTimeProcessed: uuid_1.v4(),
+                    tableName: 'Withdrawal',
+                    timestamps: false,
+                    indexes: uuid_1.v4(),
+                };
             }
         }),
         rabbit.createWorker('Bank.Command', async function handleCommand({ type, data }) {

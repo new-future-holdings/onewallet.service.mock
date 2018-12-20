@@ -1,1 +1,1 @@
-{"version":3,"file":"bank.d.ts","sourceRoot":"","sources":["../src/bank.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,MAAM,EAAE,MAAM,SAAS,CAAC;AAoBjC,wBAAsB,KAAK,CAAC,MAAM,EAAE,MAAM,iBAyQzC;AACD,wBAAsB,IAAI,kBAEzB"}
+{"version":3,"file":"bank.d.ts","sourceRoot":"","sources":["../src/bank.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,MAAM,EAAE,MAAM,SAAS,CAAC;AAoBjC,wBAAsB,KAAK,CAAC,MAAM,EAAE,MAAM,iBA6QzC;AACD,wBAAsB,IAAI,kBAEzB"}
