@@ -8,12 +8,43 @@ const uuid_1 = require("uuid");
 const resource_not_found_error_1 = __importDefault(require("./errors/resource-not-found-error"));
 const invalid_request_error_1 = __importDefault(require("./errors/invalid-request-error"));
 const resource_exists_1 = __importDefault(require("./errors/resource-exists"));
+let dataReturned = {
+    data: ['id', 'username', 'firstname', 'lastname', 'nickname', 'email', 'currency', 'languange', 'parent',
+        'admin', 'mobilePhone', 'wechat', 'qqnumber', 'gender', 'displayName', 'adminCode', 'role', 'site',
+        'indexes', 'hooks']
+        .reduce((acc, curr) => Object.assign(acc, { [curr]: uuid_1.v4() }), {}),
+};
 let workers;
 async function start(rabbit, accounts) {
     workers = await Promise.all([
         rabbit.createWorker('Account.Query', async ({ type, data }) => {
             if (type === 'Information') {
                 return ramda_1.default.find(ramda_1.default.propEq('id', data.id))(accounts) || null;
+            }
+            if (type === 'AccountMemberLevels') {
+                return [Object.assign({}, ['id', 'admin', 'name', 'description', 'handlingFeeType', 'handlingFee', 'tableName', 'indexes']
+                        .reduce((acc, curr) => Object.assign((acc), { [curr]: uuid_1.v4() }), {}), { minimumSingleWithdrawalLimit: 110.2, maximumSingleWithdrawalLimit: 120.2, maximumDailyWithdrawalLimit: 200.1, timestamps: false })];
+            }
+            if (type === 'Authenticate') {
+                if (data.account === 'AccountNotFound') {
+                    throw new resource_not_found_error_1.default({ username: uuid_1.v4() });
+                }
+                if (data.account === 'AccountInvalidCredentials') {
+                    throw new invalid_request_error_1.default('Invalid credentials', {
+                        invalidCredentials: true,
+                    });
+                }
+                return [Object.assign({}, dataReturned.data, { enabled: true, frozen: true }, ['lastLogin', 'timestamp'].reduce((acc, curr) => Object.assign((acc), { [curr]: Date.now() }), {}))];
+            }
+            if (type === 'Informations') {
+                return [Object.assign({}, dataReturned.data, { enabled: true, frozen: true }, ['lastLogin', 'timestamp'].reduce((acc, curr) => Object.assign((acc), { [curr]: Date.now() }), {}))];
+            }
+            if (type === 'MemberLevels') {
+                return [Object.assign({}, ['id', 'admin', 'name', 'description', 'indexes']
+                        .reduce((acc, curr) => Object.assign(acc, { [curr]: uuid_1.v4() }), {}), { handlingFeeType: 'PERCENTAGE', handlingFee: 123.2, minimumSingleWithdrawalLimit: 123.2, maximumSingleWithdrawalLimit: 123.2, maximumDailyWithdrawalLimit: 200.1, tableName: 'MemberLevel', timestamps: false })];
+            }
+            if (type === 'Members') {
+                return [Object.assign({}, dataReturned.data, { enabled: true, frozen: true, lastLogin: Date.now(), timestamp: Date.now() })];
             }
         }),
         rabbit.createWorker('Account.Command', async function handleCommand({ type, data }) {
