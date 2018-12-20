@@ -40,7 +40,8 @@ async function start(rabbit, accounts) {
                 return [Object.assign({}, dataReturned.data, { enabled: true, frozen: true }, ['lastLogin', 'timestamp'].reduce((acc, curr) => Object.assign((acc), { [curr]: Date.now() }), {}))];
             }
             if (type === 'MemberLevels') {
-                return [Object.assign({}, ['id', 'admin', 'name', 'description', 'indexes'].reduce((acc, curr) => Object.assign(acc, { [curr]: uuid_1.v4() }), {}), { handlingFeeType: 'PERCENTAGE', handlingFee: 123.2, minimumSingleWithdrawalLimit: 123.2, maximumSingleWithdrawalLimit: 123.2, maximumDailyWithdrawalLimit: 200.1, tableName: 'MemberLevel', timestamps: false })];
+                return [Object.assign({}, ['id', 'admin', 'name', 'description', 'indexes']
+                        .reduce((acc, curr) => Object.assign(acc, { [curr]: uuid_1.v4() }), {}), { handlingFeeType: 'PERCENTAGE', handlingFee: 123.2, minimumSingleWithdrawalLimit: 123.2, maximumSingleWithdrawalLimit: 123.2, maximumDailyWithdrawalLimit: 200.1, tableName: 'MemberLevel', timestamps: false })];
             }
             if (type === 'Members') {
                 return [Object.assign({}, dataReturned.data, { enabled: true, frozen: true, lastLogin: Date.now(), timestamp: Date.now() })];

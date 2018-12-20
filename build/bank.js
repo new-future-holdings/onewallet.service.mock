@@ -22,7 +22,7 @@ async function start(rabbit) {
                         noMemberLevel: true,
                     });
                 }
-                if (data.account === 'AmountIsGreaterThanCurrentAmount') {
+                if (data.account === 'AmountNotInRange') {
                     throw new invalid_request_error_1.default('Withdrawal amount is not in range.', {
                         amount: 123.2,
                         minimumWithdrawal: 120.2,
@@ -119,8 +119,6 @@ async function start(rabbit) {
                 dateTimeProcessed: uuid_1.v4();
                 tableName: 'Withdrawal';
                 timestamps: false;
-                instanceMethods: { }
-                ;
                 indexes: uuid_1.v4();
             }
         }),

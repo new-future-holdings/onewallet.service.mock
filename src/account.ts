@@ -6,7 +6,6 @@ import ResourceNotFoundError from './errors/resource-not-found-error';
 import InvalidRequestError from './errors/invalid-request-error';
 import ResourceExistsError from './errors/resource-exists';
 
-
 type Request = {
   username: 'RoleSuperAdmin' | 'RoleMember'  | 'RoleOperatorWithRoleSuperAdmin' | 'RoleOperatorWithRoleAdmin' 
   | 'RoleOperatorWithRoleOperator' | 'AccountNotFound' 
@@ -73,7 +72,8 @@ export async function start(rabbit: Rabbit, accounts: any[]) {
 
       if (type === 'MemberLevels') {
         return [{
-          ...['id', 'admin', 'name', 'description', 'indexes'].reduce((acc, curr) => Object.assign(acc, { [curr]: uuid() }), {}), 
+          ...['id', 'admin', 'name', 'description', 'indexes']
+          .reduce((acc, curr) => Object.assign(acc, { [curr]: uuid() }), {}), 
           handlingFeeType: 'PERCENTAGE',
           handlingFee: 123.2,
           minimumSingleWithdrawalLimit: 123.2,

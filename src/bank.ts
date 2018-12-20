@@ -7,7 +7,8 @@ import ResourceExistsError from './errors/resource-exists';
 type Request = {
   withdrawal: 'WithdrawalIdNotFound' | 'WithdrawalNotOnPendingState'
 } & {
-  account: 'AccountNotExists' | 'AccountMemberLevelNotExists' | "HighPointMemberlLevelNotExists" | 'AmountIsGreaterThanCurrentAmount'
+  account: 'AccountNotExists' | 'AccountMemberLevelNotExists' | 'HighPointMemberlLevelNotExists' |
+   'AmountNotInRange'
     | 'DailyWithdrawalExceed'
 } & {
   memberLevel: 'MemberLevelNotExists' | 'PaymentMethodAndMemberLevelAlreadyExists'
@@ -40,7 +41,7 @@ export async function start(rabbit: Rabbit) {
           );
         }
 
-        if (data.account === 'AmountIsGreaterThanCurrentAmount') {
+        if (data.account === 'AmountNotInRange') {
           throw new InvalidRequestError('Withdrawal amount is not in range.', {
             amount: 123.2,
             minimumWithdrawal: 120.2,
@@ -51,7 +52,7 @@ export async function start(rabbit: Rabbit) {
         if (data.account === 'DailyWithdrawalExceed') {
           throw new InvalidRequestError('Maximum daily withdrawal exceed', {
             withdrawals: 200.2,
-            maximum:300.5,
+            maximum: 300.5,
           });
         }
         return new Promise(() => {
@@ -143,7 +144,6 @@ export async function start(rabbit: Rabbit) {
         dateTimeProcessed: uuid();
         tableName: 'Withdrawal';
         timestamps: false;
-        instanceMethods: {};
         indexes: uuid();
       }
     }),
