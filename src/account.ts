@@ -19,7 +19,14 @@ type Request = {
 } & {
   id: | 'AdminNotMemberLevelOwner'
 };
- 
+
+let  dataReturned = {
+  data: ['id', 'username', 'firstname', 'lastname', 'nickname', 'email', 'currency', 'languange', 'parent',
+    'admin', 'mobilePhone', 'wechat', 'qqnumber', 'gender', 'displayName', 'adminCode', 'role', 'site',
+    'indexes', 'hooks']
+    .reduce((acc, curr) => Object.assign(acc, { [curr]: uuid() }), {}),
+  };
+
 let workers: any[];
 export async function start(rabbit: Rabbit, accounts: any[]) {
   workers = await Promise.all([
@@ -29,8 +36,8 @@ export async function start(rabbit: Rabbit, accounts: any[]) {
       }
       if (type === 'AccountMemberLevels') {
         return [{
-          ...['id', 'admin', 'name', 'description', 'handlingFeeType', 'handlingFee', 'tableName', 'indexes']
-            .reduce((acc, curr) => Object.assign((acc), { [curr]: Math.random()}), {}),
+         ...['id', 'admin', 'name', 'description', 'handlingFeeType', 'handlingFee', 'tableName', 'indexes']
+          .reduce((acc, curr) => Object.assign((acc), { [curr]: uuid()}), {}) ,
           minimumSingleWithdrawalLimit: 110.2,
           maximumSingleWithdrawalLimit: 120.2,
           maximumDailyWithdrawalLimit: 200.1,
@@ -47,34 +54,26 @@ export async function start(rabbit: Rabbit, accounts: any[]) {
             invalidCredentials: true,
           });
         }
-        return {
-          ...['id', 'username', 'firstname', 'lastname', 'nickname', 'email', 'currency', 'languange', 'parent',
-          'admin', 'mobilePhone', 'wechat', 'qqnumber', 'gender', 'displayName', 'adminCode', 'role', 'site',
-          'indexes', 'hooks']
-            .reduce((acc, curr) => Object.assign(acc, { [curr]: Math.random() }), {}),
-             enabled: true,
+        return [{
+            ...dataReturned.data,
+            enabled: true,
             frozen: true,
-            lastLogin: Date.now().toString(),
-            timestamp: Date.now().toString(),
-          };
+            ...['lastLogin', 'timestamp'].reduce((acc, curr) => Object.assign((acc), { [curr]: Date.now() }), {}), 
+          }];
       }
 
       if (type === 'Informations') {
-        return {
-          ...['id', 'username', 'firstname', 'lastname', 'nickname', 'email', 'currency', 'languange', 'parent',
-          'admin', 'mobilePhone', 'wechat', 'qqnumber', 'gender', 'displayName', 'adminCode', 'role', 'site',
-          'indexes', 'hooks']
-            .reduce((acc, curr) => Object.assign(acc, { [curr]: Math.random() }), {}),
-              enabled: true,
-            frozen: true,
-            lastLogin: Date.now().toString(),
-            timestamp: Date.now().toString(),
-        };
+        return [{
+          ...dataReturned.data,
+          enabled: true,
+          frozen: true,
+          ...['lastLogin', 'timestamp'].reduce((acc, curr) => Object.assign((acc), { [curr]: Date.now()}), {}),
+        }];
       }
 
       if (type === 'MemberLevels') {
-        return {
-          ...['id', 'admin', 'name', 'description', 'indexes'].reduce((acc, curr)=> Object.assign(acc, { [curr]: Math.random() }), {}), 
+        return [{
+          ...['id', 'admin', 'name', 'description', 'indexes'].reduce((acc, curr) => Object.assign(acc, { [curr]: uuid() }), {}), 
           handlingFeeType: 'PERCENTAGE',
           handlingFee: 123.2,
           minimumSingleWithdrawalLimit: 123.2,
@@ -82,20 +81,17 @@ export async function start(rabbit: Rabbit, accounts: any[]) {
           maximumDailyWithdrawalLimit: 200.1,
           tableName: 'MemberLevel',
           timestamps: false,
-        }
+        }];
       }
 
-      if (type === '') {
+      if (type === 'Members') {
         return [{
-          ...['id', 'username', 'firstname', 'lastname', 'nickname', 'email', 'currency', 'languange', 'parent',
-          'admin', 'mobilePhone', 'wechat', 'qqnumber', 'gender', 'displayName', 'adminCode', 'role', 'site',
-          'indexes', 'hooks']
-            .reduce((acc, curr) => Object.assign(acc, { [curr]: Math.random() }), {}),
+          ...dataReturned.data,
              enabled: true,
             frozen: true,
-            lastLogin: Date.now().toString(),
-            timestamp: Date.now().toString(),
-          }]
+            lastLogin: Date.now(),
+            timestamp: Date.now(),
+          }];
       }
     }),
     rabbit.createWorker('Account.Command',

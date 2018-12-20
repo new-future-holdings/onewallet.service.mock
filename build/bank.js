@@ -10,7 +10,7 @@ const resource_exists_1 = __importDefault(require("./errors/resource-exists"));
 let workers;
 async function start(rabbit) {
     workers = await Promise.all([
-        rabbit.createWorker('Account.Query', async function handleCommand({ type, data }) {
+        rabbit.createWorker('Bank.Query', async function handleCommand({ type, data }) {
             if (type === 'CanWithdraw') {
                 if (data.account === 'AccountMemberLevelNotExists') {
                     throw new invalid_request_error_1.default('No member level being assigned to the account', {
@@ -124,7 +124,7 @@ async function start(rabbit) {
                 indexes: uuid_1.v4();
             }
         }),
-        rabbit.createWorker('Account.Command', async function handleCommand({ type, data }) {
+        rabbit.createWorker('Bank.Command', async function handleCommand({ type, data }) {
             if (type === 'RejectWithdrawal') {
                 if (data.withdrawal === 'WithdrawalIdNotFound') {
                     throw new resource_not_found_error_1.default({

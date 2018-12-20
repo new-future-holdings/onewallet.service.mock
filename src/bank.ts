@@ -19,7 +19,7 @@ type Request = {
 let workers: any[];
 export async function start(rabbit: Rabbit) {
   workers = await Promise.all([
-    rabbit.createWorker('Account.Query',
+    rabbit.createWorker('Bank.Query',
      async function handleCommand({type, data}: {type: string, data: Request}) {
       if (type === 'CanWithdraw') {
         if (data.account === 'AccountMemberLevelNotExists') {
@@ -147,7 +147,7 @@ export async function start(rabbit: Rabbit) {
         indexes: uuid();
       }
     }),
-    rabbit.createWorker('Account.Command',
+    rabbit.createWorker('Bank.Command',
     async function handleCommand({ type, data }: {type: string, data: Request }) {
 
       if (type === 'RejectWithdrawal') {
