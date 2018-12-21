@@ -15,4 +15,6 @@ const AccountMock = __importStar(require("./account"));
 exports.AccountMock = AccountMock;
 const util = __importStar(require("./util"));
 exports.util = util;
+const BankMock = __importStar(require("./bank"));
+exports.BankMock = BankMock;
 //# sourceMappingURL=index.js.map
