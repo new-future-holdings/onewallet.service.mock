@@ -1,30 +1,61 @@
 import R from 'ramda';
+import { v4 as uuid } from 'uuid';
 
 import { Rabbit } from './types';
-import { v4 as uuid } from 'uuid';
+import { generateId } from './util';
 import ResourceNotFoundError from './errors/resource-not-found-error';
 import InvalidRequestError from './errors/invalid-request-error';
 import ResourceExistsError from './errors/resource-exists';
 
 type Request = {
-  username: 'RoleSuperAdmin' | 'RoleMember'  | 'RoleOperatorWithRoleSuperAdmin' | 'RoleOperatorWithRoleAdmin' 
-  | 'RoleOperatorWithRoleOperator' | 'AccountNotFound' 
+  username:
+    | 'RoleSuperAdmin'
+    | 'RoleMember'
+    | 'RoleOperatorWithRoleSuperAdmin'
+    | 'RoleOperatorWithRoleAdmin'
+    | 'RoleOperatorWithRoleOperator'
+    | 'AccountNotFound';
 } & {
-  admin: 'PermissionGroupWithPerMissionGroup' | 'PermissionGrouptNotFound'
+  admin: 'PermissionGroupWithPerMissionGroup' | 'PermissionGrouptNotFound';
 } & {
-  account: 'AdminNotPermissionGroupAdmin' | 'AdminNotPermissionGroupOwner' | 'AdminPermissionGroupExist' 
-  | 'MemberLevelNotFound' | 'MemberLevelExist' | 'AccountMemberLevelNotFound' 
-  | 'AccountNotFound' | 'PermissionGrouptNotFound' | 'AccountInvalidCredentials'
+  account:
+    | 'AdminNotPermissionGroupAdmin'
+    | 'AdminNotPermissionGroupOwner'
+    | 'AdminPermissionGroupExist'
+    | 'MemberLevelNotFound'
+    | 'MemberLevelExist'
+    | 'AccountMemberLevelNotFound'
+    | 'AccountNotFound'
+    | 'PermissionGrouptNotFound'
+    | 'AccountInvalidCredentials';
 } & {
-  id: | 'AdminNotMemberLevelOwner'
+  id: 'AdminNotMemberLevelOwner';
 };
 
-let  dataReturned = {
-  data: ['id', 'username', 'firstname', 'lastname', 'nickname', 'email', 'currency', 'languange', 'parent',
-    'admin', 'mobilePhone', 'wechat', 'qqnumber', 'gender', 'displayName', 'adminCode', 'role', 'site',
-    'indexes', 'hooks']
-    .reduce((acc, curr) => Object.assign(acc, { [curr]: uuid() }), {}),
-  };
+let dataReturned = {
+  data: [
+    'id',
+    'username',
+    'firstname',
+    'lastname',
+    'nickname',
+    'email',
+    'currency',
+    'languange',
+    'parent',
+    'admin',
+    'mobilePhone',
+    'wechat',
+    'qqnumber',
+    'gender',
+    'displayName',
+    'adminCode',
+    'role',
+    'site',
+    'indexes',
+    'hooks',
+  ].reduce((acc, curr) => Object.assign(acc, { [curr]: uuid() }), {}),
+};
 
 let workers: any[];
 export async function start(rabbit: Rabbit, accounts: any[]) {
@@ -34,14 +65,24 @@ export async function start(rabbit: Rabbit, accounts: any[]) {
         return R.find(R.propEq('id', data.id))(accounts) || null;
       }
       if (type === 'AccountMemberLevels') {
-        return [{
-         ...['id', 'admin', 'name', 'description', 'handlingFeeType', 'handlingFee', 'tableName', 'indexes']
-          .reduce((acc, curr) => Object.assign((acc), { [curr]: uuid()}), {}) ,
-          minimumSingleWithdrawalLimit: 110.2,
-          maximumSingleWithdrawalLimit: 120.2,
-          maximumDailyWithdrawalLimit: 200.1,
-          timestamps: false,
-        }];
+        return [
+          {
+            ...[
+              'id',
+              'admin',
+              'name',
+              'description',
+              'handlingFeeType',
+              'handlingFee',
+              'tableName',
+              'indexes',
+            ].reduce((acc, curr) => Object.assign(acc, { [curr]: uuid() }), {}),
+            minimumSingleWithdrawalLimit: 110.2,
+            maximumSingleWithdrawalLimit: 120.2,
+            maximumDailyWithdrawalLimit: 200.1,
+            timestamps: false,
+          },
+        ];
       }
 
       if (type === 'Authenticate') {
@@ -53,49 +94,70 @@ export async function start(rabbit: Rabbit, accounts: any[]) {
             invalidCredentials: true,
           });
         }
-        return [{
+        return [
+          {
             ...dataReturned.data,
             enabled: true,
             frozen: true,
-            ...['lastLogin', 'timestamp'].reduce((acc, curr) => Object.assign((acc), { [curr]: Date.now() }), {}), 
-          }];
+            ...['lastLogin', 'timestamp'].reduce(
+              (acc, curr) => Object.assign(acc, { [curr]: Date.now() }),
+              {}
+            ),
+          },
+        ];
       }
 
       if (type === 'Informations') {
-        return [{
-          ...dataReturned.data,
-          enabled: true,
-          frozen: true,
-          ...['lastLogin', 'timestamp'].reduce((acc, curr) => Object.assign((acc), { [curr]: Date.now()}), {}),
-        }];
+        return [
+          {
+            ...dataReturned.data,
+            enabled: true,
+            frozen: true,
+            ...['lastLogin', 'timestamp'].reduce(
+              (acc, curr) => Object.assign(acc, { [curr]: Date.now() }),
+              {}
+            ),
+          },
+        ];
       }
 
       if (type === 'MemberLevels') {
-        return [{
-          ...['id', 'admin', 'name', 'description', 'indexes']
-          .reduce((acc, curr) => Object.assign(acc, { [curr]: uuid() }), {}), 
-          handlingFeeType: 'PERCENTAGE',
-          handlingFee: 123.2,
-          minimumSingleWithdrawalLimit: 123.2,
-          maximumSingleWithdrawalLimit: 123.2,
-          maximumDailyWithdrawalLimit: 200.1,
-          tableName: 'MemberLevel',
-          timestamps: false,
-        }];
+        return [
+          {
+            ...['id', 'admin', 'name', 'description', 'indexes'].reduce(
+              (acc, curr) => Object.assign(acc, { [curr]: uuid() }),
+              {}
+            ),
+            handlingFeeType: 'PERCENTAGE',
+            handlingFee: 123.2,
+            minimumSingleWithdrawalLimit: 123.2,
+            maximumSingleWithdrawalLimit: 123.2,
+            maximumDailyWithdrawalLimit: 200.1,
+            tableName: 'MemberLevel',
+            timestamps: false,
+          },
+        ];
       }
 
       if (type === 'Members') {
-        return [{
-          ...dataReturned.data,
-             enabled: true,
+        return [
+          {
+            ...dataReturned.data,
+            enabled: true,
             frozen: true,
             lastLogin: Date.now(),
             timestamp: Date.now(),
-          }];
+          },
+        ];
       }
     }),
-    rabbit.createWorker('Account.Command',
-     async function handleCommand ({ type, data }: { type: string, data: Request }) {
+    rabbit.createWorker('Account.Command', async function handleCommand({
+      type,
+      data,
+    }: {
+      type: string;
+      data: Request;
+    }) {
       if (type === 'CreateAccount') {
         if (data.username === 'RoleSuperAdmin') {
           throw new InvalidRequestError(
@@ -109,25 +171,26 @@ export async function start(rabbit: Rabbit, accounts: any[]) {
             { invalidRole: true }
           );
         }
-        if (data.username === 'RoleOperatorWithRoleAdmin' ) {
+        if (data.username === 'RoleOperatorWithRoleAdmin') {
           throw new InvalidRequestError(
             'Operator cannot create account with role `admin`.',
             { invalidRole: true }
           );
         }
-        if (data.username === 'RoleOperatorWithRoleSuperAdmin' ) {
+        if (data.username === 'RoleOperatorWithRoleSuperAdmin') {
           throw new InvalidRequestError(
             'Operator cannot create account with role `super_admin`.',
             { invalidRole: true }
           );
         }
-        if (data.username === 'RoleOperatorWithRoleOperator' ) {
+        if (data.username === 'RoleOperatorWithRoleOperator') {
           throw new InvalidRequestError(
             'Operator cannot create account with role `operator`.',
             { invalidRole: true }
           );
         }
-        return true;
+
+        return generateId('acc');
       }
       if (type === 'UpdateAccount') {
         if (data.username === 'AccountNotFound') {
@@ -180,7 +243,7 @@ export async function start(rabbit: Rabbit, accounts: any[]) {
         }
         return true;
       }
-      if ( type === 'UpdatePermissionGroup') {
+      if (type === 'UpdatePermissionGroup') {
         if (data.admin === 'PermissionGrouptNotFound') {
           throw new ResourceNotFoundError({ id: uuid() });
         }
@@ -223,7 +286,7 @@ export async function start(rabbit: Rabbit, accounts: any[]) {
             account: uuid(),
             memberLevel: uuid(),
           });
-        } 
+        }
         return true;
       }
       if (type === 'UpdateMemberLevel') {
@@ -236,13 +299,13 @@ export async function start(rabbit: Rabbit, accounts: any[]) {
         return true;
       }
       if (type === 'DeleteMemberLevel') {
-       if (data.id === 'AdminNotMemberLevelOwner') {
-         throw new ResourceNotFoundError({
-           type: 'member_level',
-           id: uuid(),
-        });
-      }
-      return true;
+        if (data.id === 'AdminNotMemberLevelOwner') {
+          throw new ResourceNotFoundError({
+            type: 'member_level',
+            id: uuid(),
+          });
+        }
+        return true;
       }
     }),
   ]);

@@ -5,14 +5,33 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const ramda_1 = __importDefault(require("ramda"));
 const uuid_1 = require("uuid");
+const util_1 = require("./util");
 const resource_not_found_error_1 = __importDefault(require("./errors/resource-not-found-error"));
 const invalid_request_error_1 = __importDefault(require("./errors/invalid-request-error"));
 const resource_exists_1 = __importDefault(require("./errors/resource-exists"));
 let dataReturned = {
-    data: ['id', 'username', 'firstname', 'lastname', 'nickname', 'email', 'currency', 'languange', 'parent',
-        'admin', 'mobilePhone', 'wechat', 'qqnumber', 'gender', 'displayName', 'adminCode', 'role', 'site',
-        'indexes', 'hooks']
-        .reduce((acc, curr) => Object.assign(acc, { [curr]: uuid_1.v4() }), {}),
+    data: [
+        'id',
+        'username',
+        'firstname',
+        'lastname',
+        'nickname',
+        'email',
+        'currency',
+        'languange',
+        'parent',
+        'admin',
+        'mobilePhone',
+        'wechat',
+        'qqnumber',
+        'gender',
+        'displayName',
+        'adminCode',
+        'role',
+        'site',
+        'indexes',
+        'hooks',
+    ].reduce((acc, curr) => Object.assign(acc, { [curr]: uuid_1.v4() }), {}),
 };
 let workers;
 async function start(rabbit, accounts) {
@@ -22,8 +41,18 @@ async function start(rabbit, accounts) {
                 return ramda_1.default.find(ramda_1.default.propEq('id', data.id))(accounts) || null;
             }
             if (type === 'AccountMemberLevels') {
-                return [Object.assign({}, ['id', 'admin', 'name', 'description', 'handlingFeeType', 'handlingFee', 'tableName', 'indexes']
-                        .reduce((acc, curr) => Object.assign((acc), { [curr]: uuid_1.v4() }), {}), { minimumSingleWithdrawalLimit: 110.2, maximumSingleWithdrawalLimit: 120.2, maximumDailyWithdrawalLimit: 200.1, timestamps: false })];
+                return [
+                    Object.assign({}, [
+                        'id',
+                        'admin',
+                        'name',
+                        'description',
+                        'handlingFeeType',
+                        'handlingFee',
+                        'tableName',
+                        'indexes',
+                    ].reduce((acc, curr) => Object.assign(acc, { [curr]: uuid_1.v4() }), {}), { minimumSingleWithdrawalLimit: 110.2, maximumSingleWithdrawalLimit: 120.2, maximumDailyWithdrawalLimit: 200.1, timestamps: false }),
+                ];
             }
             if (type === 'Authenticate') {
                 if (data.account === 'AccountNotFound') {
@@ -34,20 +63,27 @@ async function start(rabbit, accounts) {
                         invalidCredentials: true,
                     });
                 }
-                return [Object.assign({}, dataReturned.data, { enabled: true, frozen: true }, ['lastLogin', 'timestamp'].reduce((acc, curr) => Object.assign((acc), { [curr]: Date.now() }), {}))];
+                return [
+                    Object.assign({}, dataReturned.data, { enabled: true, frozen: true }, ['lastLogin', 'timestamp'].reduce((acc, curr) => Object.assign(acc, { [curr]: Date.now() }), {})),
+                ];
             }
             if (type === 'Informations') {
-                return [Object.assign({}, dataReturned.data, { enabled: true, frozen: true }, ['lastLogin', 'timestamp'].reduce((acc, curr) => Object.assign((acc), { [curr]: Date.now() }), {}))];
+                return [
+                    Object.assign({}, dataReturned.data, { enabled: true, frozen: true }, ['lastLogin', 'timestamp'].reduce((acc, curr) => Object.assign(acc, { [curr]: Date.now() }), {})),
+                ];
             }
             if (type === 'MemberLevels') {
-                return [Object.assign({}, ['id', 'admin', 'name', 'description', 'indexes']
-                        .reduce((acc, curr) => Object.assign(acc, { [curr]: uuid_1.v4() }), {}), { handlingFeeType: 'PERCENTAGE', handlingFee: 123.2, minimumSingleWithdrawalLimit: 123.2, maximumSingleWithdrawalLimit: 123.2, maximumDailyWithdrawalLimit: 200.1, tableName: 'MemberLevel', timestamps: false })];
+                return [
+                    Object.assign({}, ['id', 'admin', 'name', 'description', 'indexes'].reduce((acc, curr) => Object.assign(acc, { [curr]: uuid_1.v4() }), {}), { handlingFeeType: 'PERCENTAGE', handlingFee: 123.2, minimumSingleWithdrawalLimit: 123.2, maximumSingleWithdrawalLimit: 123.2, maximumDailyWithdrawalLimit: 200.1, tableName: 'MemberLevel', timestamps: false }),
+                ];
             }
             if (type === 'Members') {
-                return [Object.assign({}, dataReturned.data, { enabled: true, frozen: true, lastLogin: Date.now(), timestamp: Date.now() })];
+                return [
+                    Object.assign({}, dataReturned.data, { enabled: true, frozen: true, lastLogin: Date.now(), timestamp: Date.now() }),
+                ];
             }
         }),
-        rabbit.createWorker('Account.Command', async function handleCommand({ type, data }) {
+        rabbit.createWorker('Account.Command', async function handleCommand({ type, data, }) {
             if (type === 'CreateAccount') {
                 if (data.username === 'RoleSuperAdmin') {
                     throw new invalid_request_error_1.default('Cannot create account with role `super_admin`.', { invalidRole: true });
@@ -64,7 +100,7 @@ async function start(rabbit, accounts) {
                 if (data.username === 'RoleOperatorWithRoleOperator') {
                     throw new invalid_request_error_1.default('Operator cannot create account with role `operator`.', { invalidRole: true });
                 }
-                return true;
+                return util_1.generateId('acc');
             }
             if (type === 'UpdateAccount') {
                 if (data.username === 'AccountNotFound') {
