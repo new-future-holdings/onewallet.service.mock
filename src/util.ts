@@ -1,5 +1,6 @@
 import { v4 as uuidV4, v1 as uuidV1 } from 'uuid';
 import crypto from 'crypto';
+import { mergeDeepLeft } from 'ramda';
 
 export function generateId(prefix: string = 'bal', uuid?: string): string {
   const id = uuid ? uuid : uuidV4();
@@ -12,4 +13,23 @@ export function generateEventId() {
   ) as string[];
 
   return `evt_${high}${mid}${low}${crypto.randomBytes(4).toString('hex')}`;
+}
+
+export function generateFakeEvent(params: {
+  type: string;
+  id?: string;
+  timestamp?: number;
+  aggregateId?: string;
+  aggregateType?: number;
+  aggregateVersion?: number;
+  body?: any;
+}) {
+  return mergeDeepLeft(params, {
+    id: generateEventId(),
+    timestamp: Date.now(),
+    aggregateId: generateId('agg'),
+    aggregateType: 1000,
+    aggregateVersion: 0,
+    body: {},
+  });
 }
