@@ -19,11 +19,16 @@ export function addEvent(data: Event) {
   return event;
 }
 
-export { events };
+let publish: (event: Event) => Promise<void>;
+
+export { events, publish };
 
 let worker: any;
 export async function start(rabbit: Rabbit, initialEvents: Event[]) {
-  const publish = await rabbit.createPublisher('OneWallet');
+  const publisher = await rabbit.createPublisher('OneWallet');
+  publish = (event: Event) =>
+    publisher(`${event.aggregateType}.${event.aggregateId}`, event);
+
   events = R.clone(initialEvents);
 
   worker = await rabbit.createWorker('EventStore', async ({ type, data }) => {
@@ -59,7 +64,7 @@ export async function start(rabbit: Rabbit, initialEvents: Event[]) {
     if (type === 'CreateEvent') {
       const event = addEvent(data);
 
-      await publish(`${data.aggregateType}.${data.aggregateId}`, event);
+      await publish(event);
       return event;
     }
 
