@@ -10,7 +10,8 @@ export declare function addEvent(data: Event): {
     aggregateType: number;
     aggregateVersion: number;
 };
-export { events };
+declare let publish: (event: Event) => Promise<void>;
+export { events, publish };
 export declare function start(rabbit: Rabbit, initialEvents: Event[]): Promise<void>;
 export declare function stop(): Promise<void>;
 //# sourceMappingURL=eventstore.d.ts.map

@@ -17,9 +17,12 @@ function addEvent(data) {
     return event;
 }
 exports.addEvent = addEvent;
+let publish;
+exports.publish = publish;
 let worker;
 async function start(rabbit, initialEvents) {
-    const publish = await rabbit.createPublisher('OneWallet');
+    const publisher = await rabbit.createPublisher('OneWallet');
+    exports.publish = publish = (event) => publisher(`${event.aggregateType}.${event.aggregateId}`, event);
     exports.events = events = ramda_1.default.clone(initialEvents);
     worker = await rabbit.createWorker('EventStore', async ({ type, data }) => {
         if (type === 'Events') {
@@ -40,7 +43,7 @@ async function start(rabbit, initialEvents) {
         }
         if (type === 'CreateEvent') {
             const event = addEvent(data);
-            await publish(`${data.aggregateType}.${data.aggregateId}`, event);
+            await publish(event);
             return event;
         }
         if (type === 'Snapshot') {
