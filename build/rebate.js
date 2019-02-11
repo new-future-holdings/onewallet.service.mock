@@ -6,14 +6,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ramda_1 = __importDefault(require("ramda"));
 let workers;
 let rebates;
-exports.balances = rebates;
+exports.rebates = rebates;
 async function start(rabbit, initialRebates) {
-    exports.balances = rebates = ramda_1.default.clone(initialRebates);
+    exports.rebates = rebates = ramda_1.default.clone(initialRebates);
     workers = await Promise.all([
         rabbit.createWorker('Rebate.Query', async ({ type, data }) => {
             if (type === 'Rebate') {
                 return (ramda_1.default.find(ramda_1.default.propEq('account', data.account))(rebates) || {
-                    account: data.account,
                     available: 0,
                     lockedBalance: 0,
                     turnoverRequirement: 0,

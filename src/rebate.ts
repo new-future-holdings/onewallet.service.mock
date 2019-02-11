@@ -12,7 +12,7 @@ type Document = {
 let workers: any[];
 let rebates: Document[];
 
-export { rebates as balances };
+export { rebates };
 
 export async function start(rabbit: Rabbit, initialRebates: Document[]) {
   rebates = R.clone(initialRebates);
@@ -22,7 +22,6 @@ export async function start(rabbit: Rabbit, initialRebates: Document[]) {
       if (type === 'Rebate') {
         return (
           R.find(R.propEq('account', data.account))(rebates) || {
-            account: data.account,
             available: 0,
             lockedBalance: 0,
             turnoverRequirement: 0,
