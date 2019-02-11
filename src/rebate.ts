@@ -14,8 +14,8 @@ let rebates: Document[];
 
 export { rebates as balances };
 
-export async function start(rabbit: Rabbit, initialBalances: Document[]) {
-  rebates = R.clone(initialBalances);
+export async function start(rabbit: Rabbit, initialRebates: Document[]) {
+  rebates = R.clone(initialRebates);
 
   workers = await Promise.all([
     rabbit.createWorker('Rebate.Query', async ({ type, data }) => {

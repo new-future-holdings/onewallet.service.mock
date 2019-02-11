@@ -7,8 +7,8 @@ const ramda_1 = __importDefault(require("ramda"));
 let workers;
 let rebates;
 exports.balances = rebates;
-async function start(rabbit, initialBalances) {
-    exports.balances = rebates = ramda_1.default.clone(initialBalances);
+async function start(rabbit, initialRebates) {
+    exports.balances = rebates = ramda_1.default.clone(initialRebates);
     workers = await Promise.all([
         rabbit.createWorker('Rebate.Query', async ({ type, data }) => {
             if (type === 'Rebate') {

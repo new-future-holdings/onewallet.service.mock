@@ -7,6 +7,6 @@ declare type Document = {
 };
 declare let rebates: Document[];
 export { rebates as balances };
-export declare function start(rabbit: Rabbit, initialBalances: Document[]): Promise<void>;
+export declare function start(rabbit: Rabbit, initialRebates: Document[]): Promise<void>;
 export declare function stop(): Promise<void>;
 //# sourceMappingURL=rebate.d.ts.map
