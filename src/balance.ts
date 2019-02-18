@@ -16,7 +16,13 @@ export async function start(rabbit: Rabbit, initialBalances: Document[]) {
   workers = await Promise.all([
     rabbit.createWorker('Balance.Query', async ({ type, data }) => {
       if (type === 'AvailableBalance') {
-        return R.find(R.propEq('account', data.account))(balances) || null;
+        return (
+          R.find(R.propEq('account', data.account))(balances) || {
+            account: data.account,
+            available: 0,
+            total: 0,
+          }
+        );
       }
     }),
     rabbit.createWorker('Balance.Command', async ({ type, data }) => {

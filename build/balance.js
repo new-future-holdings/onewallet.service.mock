@@ -13,7 +13,11 @@ async function start(rabbit, initialBalances) {
     workers = await Promise.all([
         rabbit.createWorker('Balance.Query', async ({ type, data }) => {
             if (type === 'AvailableBalance') {
-                return ramda_1.default.find(ramda_1.default.propEq('account', data.account))(balances) || null;
+                return (ramda_1.default.find(ramda_1.default.propEq('account', data.account))(balances) || {
+                    account: data.account,
+                    available: 0,
+                    total: 0,
+                });
             }
         }),
         rabbit.createWorker('Balance.Command', async ({ type, data }) => {
