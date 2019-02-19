@@ -39,6 +39,9 @@ async function start(rabbit, initialEvents) {
             if (data.sinceId) {
                 conditions.push(ramda_1.default.propSatisfies((value) => value > data.sinceId, 'id'));
             }
+            if (!ramda_1.default.isNil(data.sinceAggregateVersion)) {
+                conditions.push(ramda_1.default.propSatisfies((value) => value > data.sinceAggregateVersion, 'aggregateVersion'));
+            }
             return ramda_1.default.compose(ramda_1.default.take(100), ramda_1.default.filter(ramda_1.default.allPass(conditions)))(events);
         }
         if (type === 'CreateEvent') {
