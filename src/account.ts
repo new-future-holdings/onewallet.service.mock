@@ -64,6 +64,11 @@ export async function start(rabbit: Rabbit, accounts: any[]) {
       if (type === 'Information') {
         return R.find(R.propEq('id', data.id))(accounts) || null;
       }
+
+      if (type === 'Account') {
+        return R.find(R.propEq('id', data.id))(accounts) || null;
+      }
+
       if (type === 'AccountMemberLevels') {
         return [
           {
