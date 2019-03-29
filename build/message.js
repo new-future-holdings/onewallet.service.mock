@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const highoutput_utilities_1 = require("highoutput-utilities");
 const ramda_1 = __importDefault(require("ramda"));
 const util_1 = require("./util");
 let workers;
@@ -15,7 +16,27 @@ async function start(rabbit, initialMessages) {
                 return ramda_1.default.find(ramda_1.default.propEq('id', data.id))(messages);
             }
             if (type === 'Messages') {
-                return messages.filter(message => message.admin === data.admin);
+                const filteredMessages = messages.filter(message => message.admin === data.admin);
+                const edges = filteredMessages.map(message => {
+                    const cursor = `${message.dateTimeCreated
+                        .getTime()
+                        .toString(36)
+                        .padStart(8, '0')}${highoutput_utilities_1.hash(message.id)
+                        .toString('hex')
+                        .substr(0, 16)}}`;
+                    return {
+                        node: message,
+                        cursor: Buffer.from(cursor, 'utf8').toString('base64'),
+                    };
+                });
+                return {
+                    totalCount: filteredMessages.length,
+                    edges,
+                    pageInfo: {
+                        endCursor: 'test',
+                        hasNextPage: 'test',
+                    },
+                };
             }
             if (type === 'AccountMessages') {
                 return 'Account Messages';
