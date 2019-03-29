@@ -1,6 +1,7 @@
 import R from 'ramda';
 
 import { Rabbit } from './types';
+import { generateId } from './util';
 
 type Pagination<T> = {
   first?: number;
@@ -69,10 +70,9 @@ export async function start(
 
     rabbit.createWorker('Message.Command', async ({ type, data }) => {
       if (type === 'CreateMessage') {
-        console.log(data);
-        const document = R.find(R.propEq('id', data.id))(messages);
-
-        return document.id;
+        const id = generateId('msg');
+        messages.push({ ...data, dateTimeCreated: Date.now().toString(), id });
+        return id;
       }
 
       if (type === 'MarkAsRead') {

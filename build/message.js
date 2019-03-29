@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const ramda_1 = __importDefault(require("ramda"));
+const util_1 = require("./util");
 let workers;
 let messages;
 async function start(rabbit, initialMessages) {
@@ -22,9 +23,9 @@ async function start(rabbit, initialMessages) {
         }),
         rabbit.createWorker('Message.Command', async ({ type, data }) => {
             if (type === 'CreateMessage') {
-                console.log(data);
-                const document = ramda_1.default.find(ramda_1.default.propEq('id', data.id))(messages);
-                return document.id;
+                const id = util_1.generateId('msg');
+                messages.push(Object.assign({}, data, { dateTimeCreated: Date.now().toString(), id }));
+                return id;
             }
             if (type === 'MarkAsRead') {
                 return true;
