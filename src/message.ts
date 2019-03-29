@@ -61,8 +61,9 @@ export async function start(
 
         if (type === 'Messages') {
           const filteredMessages = messages.filter(
-            message => message.admin === data.admin
+            message => message.admin === data.filter.admin
           );
+
           const edges = filteredMessages.map(message => {
             const cursor = `${message.dateTimeCreated
               .getTime()
@@ -77,12 +78,19 @@ export async function start(
             };
           });
 
+          const endCursor =
+            edges.length > 0
+              ? R.prop('cursor')(R.last(edges) as { cursor: string })
+              : null;
+
+          let hasNextPage = false;
+
           return {
             totalCount: filteredMessages.length,
             edges,
             pageInfo: {
-              endCursor: 'test',
-              hasNextPage: 'test',
+              endCursor,
+              hasNextPage,
             },
           };
         }

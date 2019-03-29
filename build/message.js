@@ -16,7 +16,7 @@ async function start(rabbit, initialMessages) {
                 return ramda_1.default.find(ramda_1.default.propEq('id', data.id))(messages);
             }
             if (type === 'Messages') {
-                const filteredMessages = messages.filter(message => message.admin === data.admin);
+                const filteredMessages = messages.filter(message => message.admin === data.filter.admin);
                 const edges = filteredMessages.map(message => {
                     const cursor = `${message.dateTimeCreated
                         .getTime()
@@ -29,12 +29,16 @@ async function start(rabbit, initialMessages) {
                         cursor: Buffer.from(cursor, 'utf8').toString('base64'),
                     };
                 });
+                const endCursor = edges.length > 0
+                    ? ramda_1.default.prop('cursor')(ramda_1.default.last(edges))
+                    : null;
+                let hasNextPage = false;
                 return {
                     totalCount: filteredMessages.length,
                     edges,
                     pageInfo: {
-                        endCursor: 'test',
-                        hasNextPage: 'test',
+                        endCursor,
+                        hasNextPage,
                     },
                 };
             }
