@@ -37,7 +37,7 @@ type Message = {
   creator?: string;
   body: any;
   targetAccounts: string[];
-  targetMemberLevels: string[];
+  targetMemberLevels?: string[];
   dateTimeCreated: Date;
 };
 
@@ -71,7 +71,11 @@ export async function start(
     rabbit.createWorker('Message.Command', async ({ type, data }) => {
       if (type === 'CreateMessage') {
         const id = generateId('msg');
-        messages.push({ ...data, dateTimeCreated: Date.now().toString(), id });
+        messages.push({
+          ...data,
+          dateTimeCreated: new Date(),
+          id,
+        });
         return id;
       }
 

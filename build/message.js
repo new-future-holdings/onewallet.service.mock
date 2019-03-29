@@ -24,7 +24,7 @@ async function start(rabbit, initialMessages) {
         rabbit.createWorker('Message.Command', async ({ type, data }) => {
             if (type === 'CreateMessage') {
                 const id = util_1.generateId('msg');
-                messages.push(Object.assign({}, data, { dateTimeCreated: Date.now().toString(), id }));
+                messages.push(Object.assign({}, data, { dateTimeCreated: new Date(), id }));
                 return id;
             }
             if (type === 'MarkAsRead') {

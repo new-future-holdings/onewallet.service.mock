@@ -5,7 +5,7 @@ declare type Message = {
     creator?: string;
     body: any;
     targetAccounts: string[];
-    targetMemberLevels: string[];
+    targetMemberLevels?: string[];
     dateTimeCreated: Date;
 };
 export declare function start(rabbit: Rabbit, initialMessages: Message[]): Promise<void>;
