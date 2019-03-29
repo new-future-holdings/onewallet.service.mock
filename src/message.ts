@@ -1,3 +1,4 @@
+import { hash } from 'highoutput-utilities';
 import R from 'ramda';
 
 import { Rabbit } from './types';
@@ -59,7 +60,31 @@ export async function start(
         }
 
         if (type === 'Messages') {
-          return messages.filter(message => message.admin === data.admin);
+          const filteredMessages = messages.filter(
+            message => message.admin === data.admin
+          );
+          const edges = filteredMessages.map(message => {
+            const cursor = `${message.dateTimeCreated
+              .getTime()
+              .toString(36)
+              .padStart(8, '0')}${hash(message.id)
+              .toString('hex')
+              .substr(0, 16)}}`;
+
+            return {
+              node: message,
+              cursor: Buffer.from(cursor, 'utf8').toString('base64'),
+            };
+          });
+
+          return {
+            totalCount: filteredMessages.length,
+            edges,
+            pageInfo: {
+              endCursor: 'test',
+              hasNextPage: 'test',
+            },
+          };
         }
 
         if (type === 'AccountMessages') {
