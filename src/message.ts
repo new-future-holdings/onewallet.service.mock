@@ -43,7 +43,10 @@ type Message = {
 let workers: any[];
 let messages: Message[];
 
-export async function start(rabbit: Rabbit, initialMessages: Message[]) {
+export async function start(
+  rabbit: Rabbit,
+  initialMessages: Message[]
+): Promise<void> {
   messages = R.clone(initialMessages);
 
   workers = await Promise.all([
