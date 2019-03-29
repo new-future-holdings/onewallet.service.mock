@@ -69,8 +69,9 @@ export async function start(
 
     rabbit.createWorker('Message.Command', async ({ type, data }) => {
       if (type === 'CreateMessage') {
+        console.log(data);
         const document = R.find(R.propEq('id', data.id))(messages);
-        console.log(document);
+
         return document.id;
       }
 

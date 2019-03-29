@@ -22,8 +22,8 @@ async function start(rabbit, initialMessages) {
         }),
         rabbit.createWorker('Message.Command', async ({ type, data }) => {
             if (type === 'CreateMessage') {
+                console.log(data);
                 const document = ramda_1.default.find(ramda_1.default.propEq('id', data.id))(messages);
-                console.log(document);
                 return document.id;
             }
             if (type === 'MarkAsRead') {
