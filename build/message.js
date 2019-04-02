@@ -8,8 +8,10 @@ const ramda_1 = __importDefault(require("ramda"));
 const util_1 = require("./util");
 let workers;
 let messages;
-async function start(rabbit, initialMessages) {
+let accountMessages;
+async function start(rabbit, { initialMessages, initialAccountMessages, }) {
     messages = ramda_1.default.clone(initialMessages);
+    accountMessages = ramda_1.default.clone(initialAccountMessages);
     workers = await Promise.all([
         rabbit.createWorker('Message.Query', async ({ type, data }) => {
             if (type === 'Message') {
@@ -43,7 +45,34 @@ async function start(rabbit, initialMessages) {
                 };
             }
             if (type === 'AccountMessages') {
-                return 'Account Messages';
+                const filteredAccountMessages = accountMessages.filter(({ account, admin }) => {
+                    const { filter } = data;
+                    return account === filter.account && admin === filter.admin;
+                });
+                const edges = filteredAccountMessages.map(accountMessage => {
+                    const cursor = `${accountMessage.dateTimeCreated
+                        .getTime()
+                        .toString(36)
+                        .padStart(8, '0')}${highoutput_utilities_1.hash(accountMessage.id)
+                        .toString('hex')
+                        .substr(0, 16)}}`;
+                    return {
+                        node: accountMessage,
+                        cursor: Buffer.from(cursor, 'utf8').toString('base64'),
+                    };
+                });
+                const endCursor = edges.length > 0
+                    ? ramda_1.default.prop('cursor')(ramda_1.default.last(edges))
+                    : null;
+                let hasNextPage = false;
+                return {
+                    totalCount: filteredAccountMessages.length,
+                    edges,
+                    pageInfo: {
+                        endCursor,
+                        hasNextPage,
+                    },
+                };
             }
         }),
         rabbit.createWorker('Message.Command', async ({ type, data }) => {
@@ -53,6 +82,15 @@ async function start(rabbit, initialMessages) {
                 return id;
             }
             if (type === 'MarkAsRead') {
+                accountMessages.map(accountMessage => {
+                    const { admin, account, id } = data;
+                    if (accountMessage.account !== account &&
+                        accountMessage.admin !== admin &&
+                        accountMessage.id !== id) {
+                        return accountMessage;
+                    }
+                    return Object.assign({}, accountMessage, { isRead: true });
+                });
                 return true;
             }
         }),
