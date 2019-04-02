@@ -33,12 +33,15 @@ export async function start(
       'Message.Query',
       async ({ type, data }: TypeAndDataInput) => {
         if (type === 'Message') {
-          return R.find(R.propEq('id', (<MessageQueryInput>data).id))(messages);
+          return R.find(R.propEq('id', (data as MessageQueryInput).id))(
+            messages
+          );
         }
 
         if (type === 'Messages') {
           const filteredMessages = messages.filter(
-            message => message.admin === (<MessagesQueryInput>data).filter.admin
+            message =>
+              message.admin === (data as MessagesQueryInput).filter.admin
           );
 
           const edges = filteredMessages.map(message => {
@@ -75,7 +78,7 @@ export async function start(
         if (type === 'AccountMessages') {
           const filteredAccountMessages = accountMessages.filter(
             ({ account, admin }) => {
-              const { filter } = <AccountMessagesQueryInput>data;
+              const { filter } = data as AccountMessagesQueryInput;
               return account === filter.account && admin === filter.admin;
             }
           );
@@ -119,7 +122,7 @@ export async function start(
         if (type === 'CreateMessage') {
           const id = generateId('msg');
           messages.push({
-            ...(<CreateMessageCommandInput>data),
+            ...(data as CreateMessageCommandInput),
             dateTimeCreated: new Date(),
             id,
           });
@@ -128,7 +131,7 @@ export async function start(
 
         if (type === 'MarkAsRead') {
           accountMessages.map(accountMessage => {
-            const { admin, account, id } = <MarkAsReadCommandInput>data;
+            const { admin, account, id } = data as MarkAsReadCommandInput;
             if (
               accountMessage.account !== account &&
               accountMessage.admin !== admin &&
