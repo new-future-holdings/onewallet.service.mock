@@ -18,7 +18,15 @@ export interface Rabbit {
   ) => Promise<(topic: string, ...args: any[]) => Promise<any>>;
   createWorker: (
     scope: string,
-    handler: ((...args: Array<any>) => Promise<any>),
+    handler: (...args: Array<any>) => Promise<any>,
     options?: WorkerOptions
   ) => Promise<any>;
 }
+
+export type Pagination<T> = {
+  first?: number;
+  after?: string;
+  filter: T;
+};
+
+export type Language = 'en' | 'zh' | 'zh-Hant' | 'zh-Hans';
