@@ -13,7 +13,24 @@ async function start(rabbit, { initialMessages, initialAccountMessages, }) {
     messages = ramda_1.default.clone(initialMessages);
     accountMessages = ramda_1.default.clone(initialAccountMessages);
     workers = await Promise.all([
-        rabbit.createWorker('Message.Query', async ({ type, data }) => {
+        rabbit.createWorker('Message', async ({ type, data }) => {
+            if (type === 'CreateMessage') {
+                const id = util_1.generateId('msg');
+                messages.push(Object.assign({}, data, { dateTimeCreated: new Date(), id }));
+                return id;
+            }
+            if (type === 'MarkAsRead') {
+                accountMessages.map(accountMessage => {
+                    const { admin, account, id } = data;
+                    if (accountMessage.account !== account &&
+                        accountMessage.admin !== admin &&
+                        accountMessage.id !== id) {
+                        return accountMessage;
+                    }
+                    return Object.assign({}, accountMessage, { isRead: true });
+                });
+                return true;
+            }
             if (type === 'Message') {
                 return ramda_1.default.find(ramda_1.default.propEq('id', data.id))(messages);
             }
@@ -73,25 +90,6 @@ async function start(rabbit, { initialMessages, initialAccountMessages, }) {
                         hasNextPage,
                     },
                 };
-            }
-        }),
-        rabbit.createWorker('Message.Command', async ({ type, data }) => {
-            if (type === 'CreateMessage') {
-                const id = util_1.generateId('msg');
-                messages.push(Object.assign({}, data, { dateTimeCreated: new Date(), id }));
-                return id;
-            }
-            if (type === 'MarkAsRead') {
-                accountMessages.map(accountMessage => {
-                    const { admin, account, id } = data;
-                    if (accountMessage.account !== account &&
-                        accountMessage.admin !== admin &&
-                        accountMessage.id !== id) {
-                        return accountMessage;
-                    }
-                    return Object.assign({}, accountMessage, { isRead: true });
-                });
-                return true;
             }
         }),
     ]);

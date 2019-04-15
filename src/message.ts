@@ -29,127 +29,116 @@ export async function start(
   accountMessages = R.clone(initialAccountMessages);
 
   workers = await Promise.all([
-    rabbit.createWorker(
-      'Message.Query',
-      async ({ type, data }: TypeAndDataInput) => {
-        if (type === 'Message') {
-          return R.find(R.propEq('id', (data as MessageQueryInput).id))(
-            messages
-          );
-        }
+    rabbit.createWorker('Message', async ({ type, data }: TypeAndDataInput) => {
+      if (type === 'CreateMessage') {
+        const id = generateId('msg');
+        messages.push({
+          ...(data as CreateMessageCommandInput),
+          dateTimeCreated: new Date(),
+          id,
+        });
+        return id;
+      }
 
-        if (type === 'Messages') {
-          const filteredMessages = messages.filter(
-            message =>
-              message.admin === (data as MessagesQueryInput).filter.admin
-          );
-
-          const edges = filteredMessages.map(message => {
-            const cursor = `${message.dateTimeCreated
-              .getTime()
-              .toString(36)
-              .padStart(8, '0')}${hash(message.id)
-              .toString('hex')
-              .substr(0, 16)}}`;
-
-            return {
-              node: message,
-              cursor: Buffer.from(cursor, 'utf8').toString('base64'),
-            };
-          });
-
-          const endCursor =
-            edges.length > 0
-              ? R.prop('cursor')(R.last(edges) as { cursor: string })
-              : null;
-
-          let hasNextPage = false;
+      if (type === 'MarkAsRead') {
+        accountMessages.map(accountMessage => {
+          const { admin, account, id } = data as MarkAsReadCommandInput;
+          if (
+            accountMessage.account !== account &&
+            accountMessage.admin !== admin &&
+            accountMessage.id !== id
+          ) {
+            return accountMessage;
+          }
 
           return {
-            totalCount: filteredMessages.length,
-            edges,
-            pageInfo: {
-              endCursor,
-              hasNextPage,
-            },
+            ...accountMessage,
+            isRead: true,
           };
-        }
+        });
 
-        if (type === 'AccountMessages') {
-          const filteredAccountMessages = accountMessages.filter(
-            ({ account, admin }) => {
-              const { filter } = data as AccountMessagesQueryInput;
-              return account === filter.account && admin === filter.admin;
-            }
-          );
+        return true;
+      }
 
-          const edges = filteredAccountMessages.map(accountMessage => {
-            const cursor = `${accountMessage.dateTimeCreated
-              .getTime()
-              .toString(36)
-              .padStart(8, '0')}${hash(accountMessage.id)
-              .toString('hex')
-              .substr(0, 16)}}`;
+      if (type === 'Message') {
+        return R.find(R.propEq('id', (data as MessageQueryInput).id))(messages);
+      }
 
-            return {
-              node: accountMessage,
-              cursor: Buffer.from(cursor, 'utf8').toString('base64'),
-            };
-          });
+      if (type === 'Messages') {
+        const filteredMessages = messages.filter(
+          message => message.admin === (data as MessagesQueryInput).filter.admin
+        );
 
-          const endCursor =
-            edges.length > 0
-              ? R.prop('cursor')(R.last(edges) as { cursor: string })
-              : null;
-
-          let hasNextPage = false;
+        const edges = filteredMessages.map(message => {
+          const cursor = `${message.dateTimeCreated
+            .getTime()
+            .toString(36)
+            .padStart(8, '0')}${hash(message.id)
+            .toString('hex')
+            .substr(0, 16)}}`;
 
           return {
-            totalCount: filteredAccountMessages.length,
-            edges,
-            pageInfo: {
-              endCursor,
-              hasNextPage,
-            },
+            node: message,
+            cursor: Buffer.from(cursor, 'utf8').toString('base64'),
           };
-        }
+        });
+
+        const endCursor =
+          edges.length > 0
+            ? R.prop('cursor')(R.last(edges) as { cursor: string })
+            : null;
+
+        let hasNextPage = false;
+
+        return {
+          totalCount: filteredMessages.length,
+          edges,
+          pageInfo: {
+            endCursor,
+            hasNextPage,
+          },
+        };
       }
-    ),
 
-    rabbit.createWorker(
-      'Message.Command',
-      async ({ type, data }: TypeAndDataInput) => {
-        if (type === 'CreateMessage') {
-          const id = generateId('msg');
-          messages.push({
-            ...(data as CreateMessageCommandInput),
-            dateTimeCreated: new Date(),
-            id,
-          });
-          return id;
-        }
+      if (type === 'AccountMessages') {
+        const filteredAccountMessages = accountMessages.filter(
+          ({ account, admin }) => {
+            const { filter } = data as AccountMessagesQueryInput;
+            return account === filter.account && admin === filter.admin;
+          }
+        );
 
-        if (type === 'MarkAsRead') {
-          accountMessages.map(accountMessage => {
-            const { admin, account, id } = data as MarkAsReadCommandInput;
-            if (
-              accountMessage.account !== account &&
-              accountMessage.admin !== admin &&
-              accountMessage.id !== id
-            ) {
-              return accountMessage;
-            }
+        const edges = filteredAccountMessages.map(accountMessage => {
+          const cursor = `${accountMessage.dateTimeCreated
+            .getTime()
+            .toString(36)
+            .padStart(8, '0')}${hash(accountMessage.id)
+            .toString('hex')
+            .substr(0, 16)}}`;
 
-            return {
-              ...accountMessage,
-              isRead: true,
-            };
-          });
+          return {
+            node: accountMessage,
+            cursor: Buffer.from(cursor, 'utf8').toString('base64'),
+          };
+        });
 
-          return true;
-        }
+        const endCursor =
+          edges.length > 0
+            ? R.prop('cursor')(R.last(edges) as { cursor: string })
+            : null;
+
+        let hasNextPage = false;
+
+        return {
+          totalCount: filteredAccountMessages.length,
+          edges,
+          pageInfo: {
+            endCursor,
+            hasNextPage,
+          },
+        };
       }
-    ),
+    }),
   ]);
 }
 
