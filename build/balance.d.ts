@@ -1,8 +1,10 @@
 import { Rabbit } from './types';
 declare type Document = {
     account: string;
-    available: number;
-    total: number;
+    totalBalance: number;
+    withdrawableBalance: number;
+    totalTurnoverRequirement: number;
+    currentTurnover: number;
 };
 declare let balances: Document[];
 export { balances };

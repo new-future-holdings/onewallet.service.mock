@@ -12,23 +12,25 @@ async function start(rabbit, initialBalances) {
     exports.balances = balances = ramda_1.default.clone(initialBalances);
     workers = await Promise.all([
         rabbit.createWorker('Balance.Query', async ({ type, data }) => {
-            if (type === 'AvailableBalance') {
+            if (type === 'Balance') {
                 return (ramda_1.default.find(ramda_1.default.propEq('account', data.account))(balances) || {
                     account: data.account,
-                    available: 0,
-                    total: 0,
+                    totalBalance: 0,
+                    withdrawableBalance: 0,
+                    totalTurnoverRequirement: 0,
+                    currentTurnover: 0,
                 });
             }
         }),
         rabbit.createWorker('Balance.Command', async ({ type, data }) => {
-            if (type === 'UpdateBalance') {
+            if (type === 'Credited') {
                 const document = ramda_1.default.find(ramda_1.default.propEq('account', data.account))(balances);
                 if (!document) {
                     return false;
                 }
-                const balance = +new big_js_1.default(document.total).add(data.delta);
-                document.available = balance;
-                document.total = balance;
+                const balance = +new big_js_1.default(document.totalBalance).add(data.delta);
+                document.totalBalance = balance;
+                document.withdrawableBalance = balance;
                 return true;
             }
             return true;

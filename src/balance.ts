@@ -3,7 +3,13 @@ import Big from 'big.js';
 
 import { Rabbit } from './types';
 
-type Document = { account: string; available: number; total: number };
+type Document = {
+  account: string;
+  totalBalance: number;
+  withdrawableBalance: number;
+  totalTurnoverRequirement: number;
+  currentTurnover: number;
+};
 
 let workers: any[];
 let balances: Document[];
@@ -15,25 +21,29 @@ export async function start(rabbit: Rabbit, initialBalances: Document[]) {
 
   workers = await Promise.all([
     rabbit.createWorker('Balance.Query', async ({ type, data }) => {
-      if (type === 'AvailableBalance') {
+      if (type === 'Balance') {
         return (
           R.find(R.propEq('account', data.account))(balances) || {
             account: data.account,
-            available: 0,
-            total: 0,
+            totalBalance: 0,
+            withdrawableBalance: 0,
+            totalTurnoverRequirement: 0,
+            currentTurnover: 0,
           }
         );
       }
     }),
     rabbit.createWorker('Balance.Command', async ({ type, data }) => {
-      if (type === 'UpdateBalance') {
-        const document = R.find(R.propEq('account', data.account))(balances);
+      if (type === 'Credited') {
+        const document = R.find<Document>(R.propEq('account', data.account))(
+          balances
+        );
         if (!document) {
           return false;
         }
-        const balance = +new Big(document.total).add(data.delta);
-        document.available = balance;
-        document.total = balance;
+        const balance = +new Big(document.totalBalance).add(data.delta);
+        document.totalBalance = balance;
+        document.withdrawableBalance = balance;
         return true;
       }
       return true;
