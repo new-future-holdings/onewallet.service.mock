@@ -23,12 +23,18 @@ async function start(rabbit, initialBalances) {
             }
         }),
         rabbit.createWorker('Balance.Command', async ({ type, data }) => {
-            if (type === 'Credited') {
-                const document = ramda_1.default.find(ramda_1.default.propEq('account', data.account))(balances);
-                if (!document) {
-                    return false;
-                }
-                const balance = +new big_js_1.default(document.totalBalance).add(data.delta);
+            const document = ramda_1.default.find(ramda_1.default.propEq('account', data.account))(balances);
+            if (!document) {
+                return false;
+            }
+            if (type === 'Credit') {
+                const balance = +new big_js_1.default(document.totalBalance).add(data.amount);
+                document.totalBalance = balance;
+                document.withdrawableBalance = balance;
+                return true;
+            }
+            if (type === 'Debit') {
+                const balance = +new big_js_1.default(document.totalBalance).sub(data.amount);
                 document.totalBalance = balance;
                 document.withdrawableBalance = balance;
                 return true;

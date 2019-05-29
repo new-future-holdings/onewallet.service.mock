@@ -34,14 +34,23 @@ export async function start(rabbit: Rabbit, initialBalances: Document[]) {
       }
     }),
     rabbit.createWorker('Balance.Command', async ({ type, data }) => {
-      if (type === 'Credited') {
-        const document = R.find<Document>(R.propEq('account', data.account))(
-          balances
-        );
-        if (!document) {
-          return false;
-        }
-        const balance = +new Big(document.totalBalance).add(data.delta);
+      const document = R.find<Document>(R.propEq('account', data.account))(
+        balances
+      );
+
+      if (!document) {
+        return false;
+      }
+
+      if (type === 'Credit') {
+        const balance = +new Big(document.totalBalance).add(data.amount);
+        document.totalBalance = balance;
+        document.withdrawableBalance = balance;
+        return true;
+      }
+
+      if (type === 'Debit') {
+        const balance = +new Big(document.totalBalance).sub(data.amount);
         document.totalBalance = balance;
         document.withdrawableBalance = balance;
         return true;
