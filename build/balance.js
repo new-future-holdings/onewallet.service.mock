@@ -39,6 +39,12 @@ async function start(rabbit, initialBalances) {
                 document.withdrawableBalance = balance;
                 return true;
             }
+            if (type === 'Rollback') {
+                return true;
+            }
+            if (type === 'CommitTurnover') {
+                return true;
+            }
             return true;
         }),
     ]);
