@@ -9,17 +9,17 @@ const util_1 = require("./util");
 let workers;
 let messages;
 let accountMessages;
-async function start(rabbit, { initialMessages, initialAccountMessages }) {
+async function start(rabbit, { initialMessages, initialAccountMessages, }) {
     messages = ramda_1.default.clone(initialMessages);
     accountMessages = ramda_1.default.clone(initialAccountMessages);
     workers = await Promise.all([
-        rabbit.createWorker("Message", async ({ type, data }) => {
-            if (type === "CreateMessage") {
-                const id = util_1.generateId("msg");
+        rabbit.createWorker('Message', async ({ type, data }) => {
+            if (type === 'CreateMessage') {
+                const id = util_1.generateId('msg');
                 messages.push(Object.assign({}, data, { dateTimeCreated: new Date(), id }));
                 return id;
             }
-            if (type === "MarkAsRead") {
+            if (type === 'MarkAsRead') {
                 accountMessages.map(accountMessage => {
                     const { admin, account, id } = data;
                     if (accountMessage.account !== account &&
@@ -31,25 +31,25 @@ async function start(rabbit, { initialMessages, initialAccountMessages }) {
                 });
                 return true;
             }
-            if (type === "Message") {
-                return ramda_1.default.find(ramda_1.default.propEq("id", data.id))(messages);
+            if (type === 'Message') {
+                return ramda_1.default.find(ramda_1.default.propEq('id', data.id))(messages);
             }
-            if (type === "Messages") {
+            if (type === 'Messages') {
                 const filteredMessages = messages.filter(message => message.admin === data.filter.admin);
                 const edges = filteredMessages.map(message => {
                     const cursor = `${message.dateTimeCreated
                         .getTime()
                         .toString(36)
-                        .padStart(8, "0")}${highoutput_utilities_1.hash(message.id)
-                        .toString("hex")
+                        .padStart(8, '0')}${highoutput_utilities_1.hash(message.id)
+                        .toString('hex')
                         .substr(0, 16)}}`;
                     return {
                         node: message,
-                        cursor: Buffer.from(cursor, "utf8").toString("base64")
+                        cursor: Buffer.from(cursor, 'utf8').toString('base64'),
                     };
                 });
                 const endCursor = edges.length > 0
-                    ? ramda_1.default.prop("cursor")(ramda_1.default.last(edges))
+                    ? ramda_1.default.prop('cursor')(ramda_1.default.last(edges))
                     : null;
                 let hasNextPage = false;
                 return {
@@ -57,11 +57,11 @@ async function start(rabbit, { initialMessages, initialAccountMessages }) {
                     edges,
                     pageInfo: {
                         endCursor,
-                        hasNextPage
-                    }
+                        hasNextPage,
+                    },
                 };
             }
-            if (type === "AccountMessages") {
+            if (type === 'AccountMessages') {
                 const filteredAccountMessages = accountMessages.filter(({ account, admin }) => {
                     const { filter } = data;
                     return account === filter.account && admin === filter.admin;
@@ -70,16 +70,16 @@ async function start(rabbit, { initialMessages, initialAccountMessages }) {
                     const cursor = `${accountMessage.dateTimeCreated
                         .getTime()
                         .toString(36)
-                        .padStart(8, "0")}${highoutput_utilities_1.hash(accountMessage.id)
-                        .toString("hex")
+                        .padStart(8, '0')}${highoutput_utilities_1.hash(accountMessage.id)
+                        .toString('hex')
                         .substr(0, 16)}}`;
                     return {
                         node: accountMessage,
-                        cursor: Buffer.from(cursor, "utf8").toString("base64")
+                        cursor: Buffer.from(cursor, 'utf8').toString('base64'),
                     };
                 });
                 const endCursor = edges.length > 0
-                    ? ramda_1.default.prop("cursor")(ramda_1.default.last(edges))
+                    ? ramda_1.default.prop('cursor')(ramda_1.default.last(edges))
                     : null;
                 let hasNextPage = false;
                 return {
@@ -87,11 +87,11 @@ async function start(rabbit, { initialMessages, initialAccountMessages }) {
                     edges,
                     pageInfo: {
                         endCursor,
-                        hasNextPage
-                    }
+                        hasNextPage,
+                    },
                 };
             }
-        })
+        }),
     ]);
 }
 exports.start = start;
