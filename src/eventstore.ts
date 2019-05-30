@@ -55,6 +55,15 @@ export async function start(rabbit: Rabbit, initialEvents: Event[]) {
         );
       }
 
+      if (!R.isNil(data.sinceAggregateVersion)) {
+        conditions.push(
+          R.propSatisfies(
+            (value: string) => value > data.sinceAggregateVersion,
+            'aggregateVersion'
+          )
+        );
+      }
+
       return R.compose<Event[], Event[], Event[]>(
         R.take(100),
         R.filter(R.allPass(conditions))

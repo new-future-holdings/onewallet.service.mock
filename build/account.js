@@ -40,6 +40,9 @@ async function start(rabbit, accounts) {
             if (type === 'Information') {
                 return ramda_1.default.find(ramda_1.default.propEq('id', data.id))(accounts) || null;
             }
+            if (type === 'Account') {
+                return ramda_1.default.find(ramda_1.default.propEq('id', data.id))(accounts) || null;
+            }
             if (type === 'AccountMemberLevels') {
                 return [
                     Object.assign({}, [
