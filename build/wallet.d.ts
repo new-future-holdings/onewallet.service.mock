@@ -10,4 +10,4 @@ declare let balances: Document[];
 export { balances };
 export declare function start(rabbit: Rabbit, initialBalances: Document[]): Promise<void>;
 export declare function stop(): Promise<void>;
-//# sourceMappingURL=balance.d.ts.map
+//# sourceMappingURL=wallet.d.ts.map

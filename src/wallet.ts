@@ -20,20 +20,10 @@ export async function start(rabbit: Rabbit, initialBalances: Document[]) {
   balances = R.clone(initialBalances);
 
   workers = await Promise.all([
-    rabbit.createWorker('Balance.Query', async ({ type, data }) => {
-      if (type === 'Balance') {
-        return (
-          R.find(R.propEq('account', data.account))(balances) || {
-            account: data.account,
-            totalBalance: 0,
-            withdrawableBalance: 0,
-            totalTurnoverRequirement: 0,
-            currentTurnover: 0,
-          }
-        );
-      }
+    rabbit.createWorker('Wallet.Query', async () => {
+      return 'not supported';
     }),
-    rabbit.createWorker('Balance.Command', async ({ type, data }) => {
+    rabbit.createWorker('Wallet.Command', async ({ type, data }) => {
       const document = R.find<Document>(R.propEq('account', data.account))(
         balances
       );
@@ -56,11 +46,7 @@ export async function start(rabbit: Rabbit, initialBalances: Document[]) {
         return true;
       }
 
-      if (type === 'Rollback') {
-        return true;
-      }
-
-      if (type === 'CommitTurnover') {
+      if (type === 'AddTurnover') {
         return true;
       }
 
