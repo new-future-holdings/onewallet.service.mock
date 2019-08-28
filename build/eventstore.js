@@ -22,7 +22,7 @@ exports.publish = publish;
 let worker;
 async function start(rabbit, initialEvents) {
     const publisher = await rabbit.createPublisher('OneWallet');
-    exports.publish = publish = (event) => publisher(`${event.aggregateType}.${event.aggregateId}`, event);
+    exports.publish = publish = (event) => publisher(`${event.aggregateType}.${event.type}`, event);
     exports.events = events = ramda_1.default.clone(initialEvents);
     worker = await rabbit.createWorker('EventStore', async ({ type, data }) => {
         if (type === 'Events') {
