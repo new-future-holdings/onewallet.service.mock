@@ -27,7 +27,7 @@ let worker: any;
 export async function start(rabbit: Rabbit, initialEvents: Event[]) {
   const publisher = await rabbit.createPublisher('OneWallet');
   publish = (event: Event) =>
-    publisher(`${event.aggregateType}.${event.aggregateId}`, event);
+    publisher(`${event.aggregateType}.${event.type}`, event);
 
   events = R.clone(initialEvents);
 
