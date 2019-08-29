@@ -37,11 +37,8 @@ let workers;
 async function start(rabbit, accounts) {
     workers = await Promise.all([
         rabbit.createWorker('Account.Query', async ({ type, data }) => {
-            if (type === 'Information') {
-                return ramda_1.default.find(ramda_1.default.propEq('id', data.id))(accounts) || null;
-            }
             if (type === 'Account') {
-                return ramda_1.default.find(ramda_1.default.propEq('id', data.id))(accounts) || null;
+                return ramda_1.default.find(account => ramda_1.default.equals(data, ramda_1.default.pick(ramda_1.default.keys(data), account)))(accounts) || null;
             }
             if (type === 'AccountMemberLevels') {
                 return [

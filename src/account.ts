@@ -61,12 +61,8 @@ let workers: any[];
 export async function start(rabbit: Rabbit, accounts: any[]) {
   workers = await Promise.all([
     rabbit.createWorker('Account.Query', async ({ type, data }) => {
-      if (type === 'Information') {
-        return R.find(R.propEq('id', data.id))(accounts) || null;
-      }
-
       if (type === 'Account') {
-        return R.find(R.propEq('id', data.id))(accounts) || null;
+        return R.find(account => R.equals(data, R.pick(R.keys<string>(data), account)))(accounts) || null;
       }
 
       if (type === 'AccountMemberLevels') {
