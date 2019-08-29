@@ -12,7 +12,7 @@ function clearEvents(initialEvents) {
 }
 exports.clearEvents = clearEvents;
 function addEvent(data) {
-    const event = Object.assign({}, data, { id: util_1.generateEventId(), timestamp: Date.now() });
+    const event = Object.assign(Object.assign({}, data), { id: util_1.generateEventId(), timestamp: Date.now() });
     events.push(event);
     return event;
 }

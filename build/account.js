@@ -45,7 +45,7 @@ async function start(rabbit, accounts) {
             }
             if (type === 'AccountMemberLevels') {
                 return [
-                    Object.assign({}, [
+                    Object.assign(Object.assign({}, [
                         'id',
                         'admin',
                         'name',
@@ -54,7 +54,7 @@ async function start(rabbit, accounts) {
                         'handlingFee',
                         'tableName',
                         'indexes',
-                    ].reduce((acc, curr) => Object.assign(acc, { [curr]: uuid_1.v4() }), {}), { minimumSingleWithdrawalLimit: 110.2, maximumSingleWithdrawalLimit: 120.2, maximumDailyWithdrawalLimit: 200.1, timestamps: false }),
+                    ].reduce((acc, curr) => Object.assign(acc, { [curr]: uuid_1.v4() }), {})), { minimumSingleWithdrawalLimit: 110.2, maximumSingleWithdrawalLimit: 120.2, maximumDailyWithdrawalLimit: 200.1, timestamps: false }),
                 ];
             }
             if (type === 'Authenticate') {
@@ -67,22 +67,22 @@ async function start(rabbit, accounts) {
                     });
                 }
                 return [
-                    Object.assign({}, dataReturned.data, { enabled: true, frozen: true }, ['lastLogin', 'timestamp'].reduce((acc, curr) => Object.assign(acc, { [curr]: Date.now() }), {})),
+                    Object.assign(Object.assign(Object.assign({}, dataReturned.data), { enabled: true, frozen: true }), ['lastLogin', 'timestamp'].reduce((acc, curr) => Object.assign(acc, { [curr]: Date.now() }), {})),
                 ];
             }
             if (type === 'Informations') {
                 return [
-                    Object.assign({}, dataReturned.data, { enabled: true, frozen: true }, ['lastLogin', 'timestamp'].reduce((acc, curr) => Object.assign(acc, { [curr]: Date.now() }), {})),
+                    Object.assign(Object.assign(Object.assign({}, dataReturned.data), { enabled: true, frozen: true }), ['lastLogin', 'timestamp'].reduce((acc, curr) => Object.assign(acc, { [curr]: Date.now() }), {})),
                 ];
             }
             if (type === 'MemberLevels') {
                 return [
-                    Object.assign({}, ['id', 'admin', 'name', 'description', 'indexes'].reduce((acc, curr) => Object.assign(acc, { [curr]: uuid_1.v4() }), {}), { handlingFeeType: 'PERCENTAGE', handlingFee: 123.2, minimumSingleWithdrawalLimit: 123.2, maximumSingleWithdrawalLimit: 123.2, maximumDailyWithdrawalLimit: 200.1, tableName: 'MemberLevel', timestamps: false }),
+                    Object.assign(Object.assign({}, ['id', 'admin', 'name', 'description', 'indexes'].reduce((acc, curr) => Object.assign(acc, { [curr]: uuid_1.v4() }), {})), { handlingFeeType: 'PERCENTAGE', handlingFee: 123.2, minimumSingleWithdrawalLimit: 123.2, maximumSingleWithdrawalLimit: 123.2, maximumDailyWithdrawalLimit: 200.1, tableName: 'MemberLevel', timestamps: false }),
                 ];
             }
             if (type === 'Members') {
                 return [
-                    Object.assign({}, dataReturned.data, { enabled: true, frozen: true, lastLogin: Date.now(), timestamp: Date.now() }),
+                    Object.assign(Object.assign({}, dataReturned.data), { enabled: true, frozen: true, lastLogin: Date.now(), timestamp: Date.now() }),
                 ];
             }
         }),

@@ -16,7 +16,7 @@ async function start(rabbit, { initialMessages, initialAccountMessages, }) {
         rabbit.createWorker('Message', async ({ type, data }) => {
             if (type === 'CreateMessage') {
                 const id = util_1.generateId('msg');
-                messages.push(Object.assign({}, data, { dateTimeCreated: new Date(), id }));
+                messages.push(Object.assign(Object.assign({}, data), { dateTimeCreated: new Date(), id }));
                 return id;
             }
             if (type === 'MarkAsRead') {
@@ -27,7 +27,7 @@ async function start(rabbit, { initialMessages, initialAccountMessages, }) {
                         accountMessage.id !== id) {
                         return accountMessage;
                     }
-                    return Object.assign({}, accountMessage, { isRead: true });
+                    return Object.assign(Object.assign({}, accountMessage), { isRead: true });
                 });
                 return true;
             }
