@@ -1,7 +1,7 @@
 import R from 'ramda';
 
 import { Rabbit, Event } from './types';
-import { generateEventId } from './util';
+import { generateFakeEventId } from './util';
 
 let events: Event[] = [];
 
@@ -12,7 +12,7 @@ export function clearEvents(initialEvents: Event[]) {
 export function addEvent(data: Event) {
   const event = {
     ...data,
-    id: generateEventId(),
+    id: generateFakeEventId(),
     timestamp: Date.now(),
   };
   events.push(event);

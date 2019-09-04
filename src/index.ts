@@ -6,7 +6,7 @@ import * as Vendor from './vendor';
 import * as Rebate from './rebate';
 import * as Sigma from './sigma';
 
-import { generateEventId, generateId, generateFakeEvent } from './util';
+export * from './util';
 export {
   EventStore,
   Wallet,
@@ -15,7 +15,4 @@ export {
   Message,
   Vendor,
   Sigma,
-  generateEventId,
-  generateId,
-  generateFakeEvent,
 };

@@ -2,7 +2,7 @@ import R from 'ramda';
 import { v4 as uuid } from 'uuid';
 
 import { Rabbit } from './types';
-import { generateId } from './util';
+import { generateFakeId } from './util';
 import ResourceNotFoundError from './errors/resource-not-found-error';
 import InvalidRequestError from './errors/invalid-request-error';
 import ResourceExistsError from './errors/resource-exists';
@@ -191,7 +191,7 @@ export async function start(rabbit: Rabbit, accounts: any[]) {
           );
         }
 
-        return generateId('acc');
+        return generateFakeId('acc');
       }
       if (type === 'UpdateAccount') {
         if (data.username === 'AccountNotFound') {

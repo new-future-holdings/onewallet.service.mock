@@ -1,7 +1,7 @@
 import { hash } from 'highoutput-utilities';
 import R from 'ramda';
 
-import { generateId } from './util';
+import { generateFakeId } from './util';
 import {
   AccountMessage,
   AccountMessagesQueryInput,
@@ -31,7 +31,7 @@ export async function start(
   workers = await Promise.all([
     rabbit.createWorker('Message', async ({ type, data }: TypeAndDataInput) => {
       if (type === 'CreateMessage') {
-        const id = generateId('msg');
+        const id = generateFakeId('msg');
         messages.push({
           ...(data as CreateMessageCommandInput),
           dateTimeCreated: new Date(),

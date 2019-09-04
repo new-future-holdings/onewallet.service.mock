@@ -1,1 +1,0 @@
-{"version":3,"file":"resource-not-found-error.d.ts","sourceRoot":"","sources":["../../src/errors/resource-not-found-error.ts"],"names":[],"mappings":"AAAA,OAAO,QAAQ,MAAM,yBAAyB,CAAC;AAC/C,UAAU,IAAI;IACZ,CAAC,GAAG,EAAE,MAAM,GAAG,GAAG,CAAC;CACpB;AACD,MAAM,CAAC,OAAO,OAAO,qBAAsB,SAAQ,QAAQ,CAAC,IAAI,CAAC;gBACnD,IAAI,CAAC,EAAE,IAAI;CAGxB"}

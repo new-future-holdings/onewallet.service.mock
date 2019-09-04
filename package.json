@@ -6,7 +6,9 @@
   "scripts": {
     "clean": "rimraf build/",
     "build": "npm run clean && tsc --project tsconfig.json",
-    "lint": "tslint --project tsconfig.json"
+    "lint": "tslint --project tsconfig.json",
+    "typecheck": "tsc --noEmit",
+    "postinstall": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -24,7 +26,7 @@
     "@types/uuid": "^3.4.4",
     "big.js": "^5.2.2",
     "highoutput-utilities": "0.0.10",
-    "onewallet.library.error": "git+https://github.com/Proto-Garage/onewallet.library.error.git#0.0.2",
+    "onewallet.library.error": "git+https://github.com/Proto-Garage/onewallet.library.error.git#semver:~v0.8.2",
     "ramda": "^0.25.0",
     "uuid": "^3.3.2"
   },
@@ -37,7 +39,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run build && git add build/",
+      "pre-commit": "npm run typecheck",
       "pre-push": "npm run lint"
     }
   }
