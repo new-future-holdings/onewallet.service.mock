@@ -63,3 +63,4 @@ jspm_packages/
 .vscode/
 *ts-node*
 .idea/
+build/
