@@ -9,8 +9,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const EventStoreMock = __importStar(require("./eventstore"));
 exports.EventStoreMock = EventStoreMock;
-const BalanceMock = __importStar(require("./balance"));
-exports.BalanceMock = BalanceMock;
+const WalletMock = __importStar(require("./wallet"));
+exports.WalletMock = WalletMock;
 const AccountMock = __importStar(require("./account"));
 exports.AccountMock = AccountMock;
 const BankMock = __importStar(require("./bank"));

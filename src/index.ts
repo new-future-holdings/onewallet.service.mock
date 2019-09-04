@@ -1,5 +1,5 @@
 import * as EventStoreMock from './eventstore';
-import * as BalanceMock from './balance';
+import * as WalletMock from './wallet';
 import * as AccountMock from './account';
 import * as BankMock from './bank';
 import * as MessageMock from './message';
@@ -11,7 +11,7 @@ import * as SigmaMock from './sigma';
 import { generateEventId, generateId, generateFakeEvent } from './util';
 export {
   EventStoreMock,
-  BalanceMock,
+  WalletMock,
   AccountMock,
   RebateMock,
   BankMock,
