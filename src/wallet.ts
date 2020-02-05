@@ -1,6 +1,5 @@
 import R from 'ramda';
-
-import { Rabbit } from './types';
+import Amqp from '@highoutput/amqp';
 
 type Document = {
   account: string;
@@ -21,16 +20,16 @@ function findDocument(account: string) {
   return document;
 }
 
-export async function start(rabbit: Rabbit, initial: Document[]) {
+export async function start(amqp: Amqp, initial: Document[]) {
   balances = initial;
 
   workers = await Promise.all([
-    rabbit.createWorker('Wallet.Query', async ({ type, data }) => {
+    amqp.createWorker('Wallet.Query', async ({ type, data }) => {
       if (type === 'AvailableBalance' || type === 'TotalBalance') {
         return findDocument(data.account).balance;
       }
     }),
-    rabbit.createWorker('Wallet.Command', async ({ type, data }) => {
+    amqp.createWorker('Wallet.Command', async ({ type, data }) => {
       const document = findDocument(data.account);
 
       if (type === 'Credit') {

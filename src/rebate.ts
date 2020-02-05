@@ -1,6 +1,5 @@
 import R from 'ramda';
-
-import { Rabbit } from './types';
+import Amqp from '@highoutput/amqp';
 
 type Document = {
   account: string;
@@ -14,11 +13,11 @@ let rebates: Document[];
 
 export { rebates };
 
-export async function start(rabbit: Rabbit, initialRebates: Document[]) {
+export async function start(amqp: Amqp, initialRebates: Document[]) {
   rebates = R.clone(initialRebates);
 
   workers = await Promise.all([
-    rabbit.createWorker('Rebate.Query', async ({ type, data }) => {
+    amqp.createWorker('Rebate.Query', async ({ type, data }) => {
       if (type === 'Rebate') {
         return (
           R.find(R.propEq('account', data.account))(rebates) || {
@@ -29,8 +28,7 @@ export async function start(rabbit: Rabbit, initialRebates: Document[]) {
         );
       }
     }),
-
-    rabbit.createWorker('Rebate.Command', async () => {
+    amqp.createWorker('Rebate.Command', async () => {
       return true;
     }),
   ]);

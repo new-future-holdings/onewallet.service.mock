@@ -1,7 +1,7 @@
 import R from 'ramda';
 import { v4 as uuid } from 'uuid';
+import Amqp from '@highoutput/amqp';
 
-import { Rabbit } from './types';
 import { generateFakeId } from './util';
 import ResourceNotFoundError from './errors/resource-not-found-error';
 import InvalidRequestError from './errors/invalid-request-error';
@@ -58,9 +58,9 @@ let dataReturned = {
 };
 
 let workers: any[];
-export async function start(rabbit: Rabbit, accounts: any[]) {
+export async function start(amqp: Amqp, accounts: any[]) {
   workers = await Promise.all([
-    rabbit.createWorker('Account.Query', async ({ type, data }) => {
+    amqp.createWorker('Account.Query', async ({ type, data }) => {
       if (type === 'Account') {
         return R.find(account => R.equals(data, R.pick(R.keys<string>(data), account)))(accounts) || null;
       }
@@ -152,7 +152,7 @@ export async function start(rabbit: Rabbit, accounts: any[]) {
         ];
       }
     }),
-    rabbit.createWorker('Account.Command', async function handleCommand({
+    amqp.createWorker('Account.Command', async function handleCommand({
       type,
       data,
     }: {

@@ -12,17 +12,6 @@ export type Event<T = any> = Readonly<{
   timestamp: number;
 }>;
 
-export interface Rabbit {
-  createPublisher: (
-    ...arg: any[]
-  ) => Promise<(topic: string, ...args: any[]) => Promise<any>>;
-  createWorker: (
-    scope: string,
-    handler: (...args: Array<any>) => Promise<any>,
-    options?: WorkerOptions
-  ) => Promise<any>;
-}
-
 export type Pagination<T> = {
   first?: number;
   after?: string;

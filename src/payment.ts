@@ -1,14 +1,13 @@
-import { Rabbit } from './types';
+import Amqp from '@highoutput/amqp';
 
 let workers: any[];
 
-export async function start(rabbit: Rabbit) {
+export async function start(amqp: Amqp) {
   workers = await Promise.all([
-    rabbit.createWorker('Payment.Query', async () => {
+    amqp.createWorker('Payment.Query', async () => {
       return [];
     }),
-
-    rabbit.createWorker('Payment.Command', async () => {
+    amqp.createWorker('Payment.Command', async () => {
       return true;
     }),
   ]);
