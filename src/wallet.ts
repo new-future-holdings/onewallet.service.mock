@@ -7,7 +7,7 @@ type Document = {
 };
 
 let workers: any[];
-let balances: Document[];
+let balances: Document[] = [];
 const debits: Record<string, number> = {};
 
 function findDocument(account: string) {
@@ -20,8 +20,10 @@ function findDocument(account: string) {
   return document;
 }
 
+export { balances };
+
 export async function start(amqp: Amqp, initial: Document[]) {
-  balances = initial;
+  balances = [...balances, ...initial];
 
   workers = await Promise.all([
     amqp.createWorker('Wallet.Query', async ({ type, data }) => {
