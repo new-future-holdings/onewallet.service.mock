@@ -1,6 +1,6 @@
 {
   "name": "onewallet.service.mock",
-  "version": "0.10.4",
+  "version": "0.10.5",
   "description": "",
   "main": "build/index.js",
   "scripts": {
@@ -23,6 +23,7 @@
   "dependencies": {
     "@highoutput/amqp": "^0.4.6",
     "@types/big.js": "^4.0.5",
+    "@types/node": "^13.7.0",
     "@types/ramda": "^0.25.43",
     "@types/uuid": "^3.4.4",
     "big.js": "^5.2.2",
@@ -34,9 +35,13 @@
   "devDependencies": {
     "husky": "^1.2.0",
     "prettier": "^1.15.3",
-    "rimraf": "^2.6.2",
+    "rimraf": "^3.0.2",
     "tslint": "^5.11.0",
-    "typescript": "^3.2.2"
+    "typescript": "^3.7.2"
+  },
+  "peerDependencies": {
+    "rimraf": "^3.0.2",
+    "typescript": "^3.7.2"
   },
   "husky": {
     "hooks": {
