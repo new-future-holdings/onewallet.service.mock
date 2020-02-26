@@ -1,4 +1,4 @@
-import AppError from 'onewallet.library.error';
+import AppError from '@highoutput/error';
 interface Meta {
   [key: string]: any;
 }
